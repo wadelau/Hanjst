@@ -39,6 +39,17 @@ Put these codes at the end of &lt;body>, i.e. the last element of &lt;body>:
 
 <!-- other Hanjst template sentences -->
 
+<div id="Hanjstjsondata">
+{
+	"newslist":[
+		{"title":"Runtime in client-side, reduce computing render in server-side;", "href":"#f1"},
+		{"title":"Language-independent, not-bound with backend scripts/languages;", "href":"#f2"},
+		{"title":"Totally-isolated between MVC, data transfer with JSON;", "href":"#f3"}
+	],
+	"copyright_year": 2018
+}
+</div>
+
 <!-- Hanjst codes begin -->
 <script type="text/javascript" async>
     window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // optional
@@ -177,6 +188,17 @@ Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同�
 ```javascript
 
 <!-- other Hanjst template sentences -->
+
+<div id="Hanjstjsondata">
+{
+	"newslist":[
+		{"title":"客户端解析，节省服务器端计算资源;", "href":"#f1"},
+		{"title":"模板语言独立，不与服务器端资源做任何绑定;", "href":"#f2"},
+		{"title":"纯粹的MVC，层间数据用JSON格式传递;", "href":"#f3"}
+	],
+	"copyright_year": 2018
+}
+</div>
 
 <!-- Hanjst codes begin -->
 <script type="text/javascript" async>
