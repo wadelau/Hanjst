@@ -180,7 +180,7 @@ Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同�
 
 <!-- Hanjst codes begin -->
 <script type="text/javascript" async>
-    window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // optional
+    window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // 可选的
 </script>
 <script type="text/javascript" src="Hanjst.js" async></script>
 <noscript>JavaScript Required for Hanjst.</noscript>
