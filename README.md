@@ -1,2 +1,204 @@
 # Hanjst
-Han JavaScript Template Engine
+Han JavaScript Template Language and Engine
+
+Han is the surname of my wife, and one of the given names of my daughter and son.
+
+Han is also Chinese in Pinyin, Hànrén.
+
+Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTML template engines though it sounds ridiculous.
+
+## Introduction
+
+Hanjst is a JavaScript-based template language and its engine runs on client-side.
+
+Hanjst can be written with logic expressions and it provides many similar powerful functions with backend templates.
+
+
+### Features
+
++ Runtime in client-side, reduce computing render in server-side;
+
++ Language-independent, not-bound with backend scripts/languages;
+
++ Totally-isolated between MVC, data transfer with JSON;
+
++ Full-support template tags with built-in logic and customerized JavaScript functions;
+
++ No more tags languages to be learned, just JavaScript;
+
++ ....
+
+
+### Installation
+
+Put these codes at the end of &lt;body>, i.e. the last element of &lt;body>:
+
+```javascript
+
+<!-- other Hanjst template sentences -->
+
+<!-- Hanjst codes begin -->
+<script type="text/javascript" async>
+    window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // optional
+</script>
+<script type="text/javascript" src="Hanjst.js" async></script>
+<noscript>JavaScript Required for Hanjst.</noscript>
+<!-- Hanjst codes end -->
+
+</body>
+
+<!-- other html sentences-->
+
+</html>
+
+```
+
+
+### Simple Demo
+
+Hanjst will be invoked by ***window.onload*** and the template sentences will be parsed automatically.
+
+The target result page body will be refreshed and presented with interpreted contents.
+
+Here is a few of short paragraphs written in Hanjst. 
+
+```html
+
+<div id="mynewscontentlist">
+Features:
+{foreach $newslist as $page}
+    <ul>
+        <li>
+            <a href="{$newslist[$page]['href']}">{$newslist[$page]['title']}</a>
+            {if $newslist[$page]['title'].length > 20}
+                Length is too long.
+            {else}
+                Length is okay.
+            {/if}
+        </li>
+    </ul>
+{/foreach}
+</div>
+
+```
+
+```html
+
+<div id="anotherlistdiv">
+Try to list an associative list:
+{for var $k in $userlist}
+    <li>
+        Id: {$userlist[$k]['id']}, 
+        Name: {$userlist[$k]['name'].substring(0, 20)}
+    </li>
+{/for}
+</div>
+
+```
+
+```html
+
+<div id="randnum"> 
+Give random numbers:
+{$i=0}
+{while $i<5}
+    <li> 
+        line {$i} 
+    </li>
+	{$i++}
+{/while}
+
+</div>
+
+
+```
+
+```html
+<p>
+    <a href="#atag"{if $user['feedback'] eq "fb2"} class="fb2class"{/if}>
+        This is a href.
+    </a>
+</p>
+
+```
+
+
+### Live Demo Page
+-R/j2SP 
+
+[Hanjst Online Demo](https://ufqi.com/dev/hanjst/Hanjst.demo.html)
+
+
+
+---
+
+---
+
+
+# Hanjst
+Han JavaScript 模板语言及引擎
+
+
+Han 是我妻子的姓(韩), 也是出现我女儿和儿子名字中的音节。
+
+Han 也是中文“汉族”的意思。
+
+Hanjst设计用来在HTML模板语言领域不断地“再造轮子”的活动，尽管这听起来有些怪异。
+
+## 介绍
+
+Hanjst是一种基于JavaScript的模板语言及解析引擎，她运行在客户端。
+
+Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同的功能。
+
+### 特征/功能
+
++ Hanjst完全客户端解析，节省服务器端计算资源;
+
++ 模板语言独立，不与服务器端资源做任何绑定；
+
++ 纯粹的MVC，层间数据用JSON格式传递；
+
++ 常见模板语言功能全支持，附带复杂而强大的JavaScript编程能力；
+
++ 无学习成本，直接使用JavaScript书写模板语言；
+
++ ....
+
+
+### 安装及调用
+
+将下述代码段放置于HTML页面的 body 元素中，通常位于 body 的结束符前， &lt;/body> .
+
+```javascript
+
+<!-- other Hanjst template sentences -->
+
+<!-- Hanjst codes begin -->
+<script type="text/javascript" async>
+    window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // optional
+</script>
+<script type="text/javascript" src="Hanjst.js" async></script>
+<noscript>JavaScript Required for Hanjst.</noscript>
+<!-- Hanjst codes end -->
+
+</body>
+
+<!-- other html sentences-->
+
+</html>
+
+```
+
+### 简单示例
+
+Hanjst在HTML页面加载时被 ***window.onload*** 自动调用。模板语句会被自动解析，结果页面内容会被自动刷新到 body 元素上.
+
+下面是一些 Hanjst 的示例代码。
+
+(参见英文版部分)
+
+### 在线实例
+-R/j2SP 
+
+[Hanjst Online Demo](https://ufqi.com/dev/hanjst/Hanjst.demo.html)
