@@ -18,9 +18,9 @@ Hanjst can be written with logic expressions and it provides many similar powerf
 
 ### Features
 
-+ Runtime in client-side, reduce computing render in server-side;
++ Hanjst's Runtime in client-side, reduce computing render in server-side;
 
-+ Language-independent, not-bound with backend scripts/languages;
++ Hanjst is Language-independent, not-bound with backend scripts/languages;
 
 + Totally-isolated between MVC, data transfer with JSON;
 
@@ -159,7 +159,7 @@ Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同�
 
 + Hanjst完全客户端解析，节省服务器端计算资源;
 
-+ 模板语言独立，不与服务器端资源做任何绑定；
++ Hanjst模板语言独立，不与服务器端资源做任何绑定；
 
 + 纯粹的MVC，层间数据用JSON格式传递；
 
