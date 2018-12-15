@@ -1,9 +1,11 @@
 # Hanjst
 Han JavaScript Template Language and Engine
 
+.
+
 Han is the surname of my wife, and one of the given names of my daughter and son.
 
-Han is also Chinese in Pinyin, H¨¤nr¨¦n.
+Han is also Chinese in Pinyin, HÃ nrÃ©n.
 
 Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTML template engines though it sounds ridiculous.
 
@@ -64,8 +66,8 @@ Here is a few of short paragraphs written in Hanjst.
 
 ```html
 
-<div id="mynewscontentlist">
 Features:
+<div id="mynewscontentlist">
 {foreach $newslist as $page}
     <ul>
         <li>
@@ -84,8 +86,8 @@ Features:
 
 ```html
 
-<div id="anotherlistdiv">
 Try to list an associative list:
+<div id="anotherlistdiv">
 {for var $k in $userlist}
     <li>
         Id: {$userlist[$k]['id']}, 
@@ -98,8 +100,8 @@ Try to list an associative list:
 
 ```html
 
-<div id="randnum"> 
 Give random numbers:
+<div id="randnum"> 
 {$i=0}
 {while $i<5}
     <li> 
@@ -114,6 +116,7 @@ Give random numbers:
 ```
 
 ```html
+Try to be embedded in a html element:
 <p>
     <a href="#atag"{if $user['feedback'] eq "fb2"} class="fb2class"{/if}>
         This is a href.
@@ -136,39 +139,40 @@ Give random numbers:
 
 
 # Hanjst
-Han JavaScript Ä£°åÓïÑÔ¼°ÒıÇæ
+Han JavaScript æ¨¡æ¿è¯­è¨€åŠå¼•æ“
 
+.
 
-Han ÊÇÎÒÆŞ×ÓµÄĞÕ(º«), Ò²ÊÇ³öÏÖÎÒÅ®¶ùºÍ¶ù×ÓÃû×ÖÖĞµÄÒô½Ú¡£
+Han æ˜¯æˆ‘å¦»å­çš„å§“(éŸ©), ä¹Ÿæ˜¯å‡ºç°æˆ‘å¥³å„¿å’Œå„¿å­åå­—ä¸­çš„éŸ³èŠ‚ã€‚
 
-Han Ò²ÊÇÖĞÎÄ¡°ºº×å¡±µÄÒâË¼¡£
+Han ä¹Ÿæ˜¯ä¸­æ–‡â€œæ±‰æ—â€çš„æ„æ€ã€‚
 
-HanjstÉè¼ÆÓÃÀ´ÔÚHTMLÄ£°åÓïÑÔÁìÓò²»¶ÏµØ¡°ÔÙÔìÂÖ×Ó¡±µÄ»î¶¯£¬¾¡¹ÜÕâÌıÆğÀ´ÓĞĞ©¹ÖÒì¡£
+Hanjstè®¾è®¡ç”¨æ¥ç»ˆæ­¢åœ¨HTMLæ¨¡æ¿è¯­è¨€é¢†åŸŸä¸æ–­åœ°â€œå†é€ è½®å­â€çš„æ´»åŠ¨ï¼Œå°½ç®¡è¿™å¬èµ·æ¥æœ‰äº›æ€ªå¼‚ã€‚
 
-## ½éÉÜ
+## ä»‹ç»
 
-HanjstÊÇÒ»ÖÖ»ùÓÚJavaScriptµÄÄ£°åÓïÑÔ¼°½âÎöÒıÇæ£¬ËıÔËĞĞÔÚ¿Í»§¶Ë¡£
+Hanjstæ˜¯ä¸€ç§åŸºäºJavaScriptçš„æ¨¡æ¿è¯­è¨€åŠè§£æå¼•æ“ï¼Œå¥¹è¿è¡Œåœ¨å®¢æˆ·ç«¯ã€‚
 
-HanjstÄÜ¹»±íÊöÂß¼­¿ØÖÆ£¬ÄÜ¹»ÊµÏÖÓë·şÎñÆ÷¶ËÄ£¿éÓïÑÔÏàÍ¬µÄ¹¦ÄÜ¡£
+Hanjstèƒ½å¤Ÿè¡¨è¿°é€»è¾‘æ§åˆ¶ï¼Œèƒ½å¤Ÿå®ç°ä¸æœåŠ¡å™¨ç«¯æ¨¡å—è¯­è¨€ç›¸åŒçš„åŠŸèƒ½ã€‚
 
-### ÌØÕ÷/¹¦ÄÜ
+### ç‰¹å¾/åŠŸèƒ½
 
-+ HanjstÍêÈ«¿Í»§¶Ë½âÎö£¬½ÚÊ¡·şÎñÆ÷¶Ë¼ÆËã×ÊÔ´;
++ Hanjstå®Œå…¨å®¢æˆ·ç«¯è§£æï¼ŒèŠ‚çœæœåŠ¡å™¨ç«¯è®¡ç®—èµ„æº;
 
-+ Ä£°åÓïÑÔ¶ÀÁ¢£¬²»Óë·şÎñÆ÷¶Ë×ÊÔ´×öÈÎºÎ°ó¶¨£»
++ æ¨¡æ¿è¯­è¨€ç‹¬ç«‹ï¼Œä¸ä¸æœåŠ¡å™¨ç«¯èµ„æºåšä»»ä½•ç»‘å®šï¼›
 
-+ ´¿´âµÄMVC£¬²ã¼äÊı¾İÓÃJSON¸ñÊ½´«µİ£»
++ çº¯ç²¹çš„MVCï¼Œå±‚é—´æ•°æ®ç”¨JSONæ ¼å¼ä¼ é€’ï¼›
 
-+ ³£¼ûÄ£°åÓïÑÔ¹¦ÄÜÈ«Ö§³Ö£¬¸½´ø¸´ÔÓ¶øÇ¿´óµÄJavaScript±à³ÌÄÜÁ¦£»
++ å¸¸è§æ¨¡æ¿è¯­è¨€åŠŸèƒ½å…¨æ”¯æŒï¼Œé™„å¸¦å¤æ‚è€Œå¼ºå¤§çš„JavaScriptç¼–ç¨‹èƒ½åŠ›ï¼›
 
-+ ÎŞÑ§Ï°³É±¾£¬Ö±½ÓÊ¹ÓÃJavaScriptÊéĞ´Ä£°åÓïÑÔ£»
++ æ— å­¦ä¹ æˆæœ¬ï¼Œç›´æ¥ä½¿ç”¨JavaScriptä¹¦å†™æ¨¡æ¿è¯­è¨€ï¼›
 
 + ....
 
 
-### °²×°¼°µ÷ÓÃ
+### å®‰è£…åŠè°ƒç”¨
 
-½«ÏÂÊö´úÂë¶Î·ÅÖÃÓÚHTMLÒ³ÃæµÄ body ÔªËØÖĞ£¬Í¨³£Î»ÓÚ body µÄ½áÊø·ûÇ°£¬ &lt;/body> .
+å°†ä¸‹è¿°ä»£ç æ®µæ”¾ç½®äºHTMLé¡µé¢çš„ body å…ƒç´ ä¸­ï¼Œé€šå¸¸ä½äº body çš„ç»“æŸç¬¦å‰ï¼Œ &lt;/body> .
 
 ```javascript
 
@@ -190,15 +194,15 @@ HanjstÄÜ¹»±íÊöÂß¼­¿ØÖÆ£¬ÄÜ¹»ÊµÏÖÓë·şÎñÆ÷¶ËÄ£¿éÓïÑÔÏàÍ¬µÄ¹¦ÄÜ¡£
 
 ```
 
-### ¼òµ¥Ê¾Àı
+### ç®€å•ç¤ºä¾‹
 
-HanjstÔÚHTMLÒ³Ãæ¼ÓÔØÊ±±» ***window.onload*** ×Ô¶¯µ÷ÓÃ¡£Ä£°åÓï¾ä»á±»×Ô¶¯½âÎö£¬½á¹ûÒ³ÃæÄÚÈİ»á±»×Ô¶¯Ë¢ĞÂµ½ body ÔªËØÉÏ.
+Hanjståœ¨HTMLé¡µé¢åŠ è½½æ—¶è¢« ***window.onload*** è‡ªåŠ¨è°ƒç”¨ã€‚æ¨¡æ¿è¯­å¥ä¼šè¢«è‡ªåŠ¨è§£æï¼Œç»“æœé¡µé¢å†…å®¹ä¼šè¢«è‡ªåŠ¨åˆ·æ–°åˆ° body å…ƒç´ ä¸Š.
 
-ÏÂÃæÊÇÒ»Ğ© Hanjst µÄÊ¾Àı´úÂë¡£
+ä¸‹é¢æ˜¯ä¸€äº› Hanjst çš„ç¤ºä¾‹ä»£ç ã€‚
 
-(²Î¼ûÓ¢ÎÄ°æ²¿·Ö)
+(å‚è§è‹±æ–‡ç‰ˆéƒ¨åˆ†)
 
-### ÔÚÏßÊµÀı
+### åœ¨çº¿å®ä¾‹
 -R/j2SP 
 
 [Hanjst Online Demo](https://ufqi.com/dev/hanjst/Hanjst.demo.html)
