@@ -149,7 +149,7 @@ Try to be embedded in a html element:
 ---
 
 
-# Hanjst
+# 汉吉斯特（Hanjst）
 Han JavaScript 模板语言及引擎
 
 .

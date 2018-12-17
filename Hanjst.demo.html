@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf8" />
 <!--SERVER_SIDE_SETTINGS-->
-<meta name="keywords" content="Hanjst, Template, template engine, JavaScript, cross-platform, 模板, 模板引擎, javascript template engine"/>
-<meta name="description" content="Hanjst is a JavaScript-based, generally-targeted template language and engine. Hanjst是一种基于JavaScript的HTML模板语言及模板引擎, javascript template engine."/>
-<title>Hanjst, Han JavaScript Template Engine</title>
+<meta name="keywords" content="Hanjst, Template, template engine, JavaScript, cross-platform, 汉吉斯特, 模板, 模板引擎, javascript template engine"/>
+<meta name="description" content="Hanjst is a JavaScript-based, generally-targeted template language and engine. Hanjst/汉吉斯特是一种基于JavaScript的HTML模板语言及模板引擎, javascript template engine."/>
+<title>Hanjst/汉吉斯特, Han JavaScript Template Engine</title>
 </head>
 <body><!-- contents of the body will be parsed and compiled by Hanjst -->
 <style>span{ padding-top:30px; } a{ text-decoration:none; }</style>	
@@ -15,45 +15,54 @@
 
 {$i=Math.random()}
 {var $jstr='this is a j string'}
+<p>....</p>
 
-<hr/>
-<div id="mynewscontentlist">特征优势/Features
+<div id="mynewscontentlist"><h3>Hanjst特征/Features</h3> <hr/>
 {foreach $newscontentlist as $page}
 	<ul><li><a href="#">{$newscontentlist[$page]['title']}</a></li></ul>
+{foreachelse}
+	<ul><li>No More News.</li></ul>
 {/foreach}
 </div>
-<hr/>
+<p>....</p>
 
+<h3>Hanjst样例/Demo</h3>
+<hr/>
 <span> Try to call a func named 'aFunc':
 {$aFunc($i)}
 </span>
 
-<span>Call a built-in func:
+<p><span>Call a built-in func:
 {$jstr.substring(0, 12)}
 </span>
+</p>
 
-<span id="randnum5"> <br/> Give random numbers:
+<span id="randnum5"> Give random numbers:
 {while $i<5}
 	<li> line {$i} </li>
 	{$i++}
+{whileelse}
+		<li>Out of While.</li>
 {/while}
 </span>
-
-```
-
+....
+<p>
 <span> 2nd, try to list an associative list:
 {for var $k in $userlist}
 	<li>Id:{$userlist[$k]['id']}, Name:{$userlist[$k]['name']}</li>
+{forelse}
+	<li>No more User Data.</li>
 {/for}
 </span>
+</p>
 
 <span> 3rd, try to list an associative list:
 {foreach $userlist as $k}
 	<li onclick="javascript:bFunc('{$k}');">{$k} Id:{$userlist[$k]['id']}, Name:{$userlist[$k]['name']}</li>
 {/foreach}
 </span>
-
-<span> try to branch-if-else: 
+<p>
+<span> Try to branch-if-else: 
 	{$i=Math.random()}
 	{if $i < 0.3}
 		<li>{$i} is lt 0.3</li>
@@ -63,14 +72,14 @@
 		<li>{$i} is gt 0.5</li>
 	{/if}
 </span>
+</p>
 <script>
 	if(1==1){
 		console.log("additional original scripts before jsondata will be invoked twice....."
 			+ (new Date()));
 	}
 </script>
-
-<hr/>
+<p>
 <!-- <a></a> -->
 <!-- -->
 <span id="literalarea">
@@ -92,6 +101,7 @@ Try literal:<br/>
 <span {if $user['feedback'] gt 4} class="cls2"{else} class="cls3"{/if}> This is a span, 2nd. </span>
 
 </div>
+</p>
 
 <hr/>
 
@@ -110,6 +120,8 @@ Try literal:<br/>
 	},
 	"keywords": "Wadelau, Xenxin, Hanjst",
 	"newslist_nextpage": "https://ufqi.com/#newlist_nextpage_value",
+	"newscontentlist2":{
+	},
 	"newscontentlist":{
 		"0":{"title":"Runtime in client-side, reduce computing render in server-side; 客户端解析，节省服务器端计算资源;", "content":"Runtime in client-side, reduce computing render in server-side;", "pages":3},
 		"1":{"title":"Language-independent, not-bound with backend scripts/languages; 模板语言独立，不与服务器端资源做任何绑定", "content":"Language-independent, not-bound with backend scripts/languages;", "pages":3},
@@ -122,6 +134,8 @@ Try literal:<br/>
 		"iname": {"surname":"Wadelau", "familyname":"Lau"},
 		"age": "33"
 	},
+	"userlist2": {
+	},
 	"userlist": {
 		"usera": {"id":1234, "name":"Alice张"},
 		"userb": {"id":4567, "name":"Bob李"}
@@ -129,7 +143,7 @@ Try literal:<br/>
 	"atag": "Xenxin\"s Tag",
 	"pageheader":"&lt;div id=\"header\"&gt;     &lt;div class=\"h_box\"&gt;       &lt;div class=\"logo\"&gt;&lt;a href=\"#\"&gt;Hanjst, Han JavaScript Template Engine&lt;/a&gt;&lt;/div&gt;       &lt;div class=\"menu\"&gt;         &lt;ul&gt;           &lt;li&gt;&lt;a href=\"Hanjst.demo.html?ri=\"&gt;首页&lt;/a&gt;&lt;/li&gt;           &lt;li&gt;&lt;a href=\"#\"&gt;关于Hanjst&lt;/a&gt;             &lt;div class=\"submenu\"&gt;               &lt;ul&gt;                   &lt;li class=\"title\"&gt;&lt;a href=\"#\"&gt;Hanjst介绍&lt;/a&gt;&lt;/li&gt;                   &lt;li class=\"title\"&gt;&lt;a href=\"#\"&gt;Hanjst品牌&lt;/a&gt;&lt;/li&gt;   &lt;/ul&gt;             &lt;/div&gt;           &lt;/li&gt;          &lt;li&gt;&lt;a href=\"#\" class=\"active\"&gt;Hanjst in 新闻&lt;/a&gt;&lt;/li&gt;  &lt;/ul&gt;       &lt;/div&gt;     &lt;/div&gt;     &lt;div class=\"clear\"&gt;&lt;/div&gt;   &lt;/div&gt;",
 	
-	"model":"&lt;div class=\"news\"&gt;           &lt;div class=\"title\"&gt;Hanjst新闻/News&lt;/div&gt;           &lt;div class=\"content\"&gt;             &lt;ul class=\"cont\" tpldata=\"newslist::repeat::\"&gt; 			{for (var $k in $newslist)}               &lt;li&gt;&lt;a class=\"btn_show\" href=\"{$newslist[$k]['href']}\"&gt;&gt; {$newslist[$k]['title']} 		&lt;a name=\"atag\" tpldata=\"atag::updatevalue\"&gt;{$newslist[$k]['title']}&lt;/a&gt; 	&lt;/a&gt; 				{if $newslist[$k]['title'].length &gt; 25 } 	&lt;span&gt;Length is too long!&lt;/span&gt; 				{else} 					&lt;span&gt;Length is okay.&lt;/span&gt; 				{/if} 			  &lt;/li&gt; 			{/for}    &lt;/ul&gt;           &lt;/div&gt;           &lt;div class=\"pages\"&gt;             &lt;ul&gt;           &lt;li&gt;&lt;a href=\"javascript:;\" tpldata=\"newslist_nextpage::updateattribute::href\" href=\"{$newslist_nextpage}\"&gt; 下一页 &lt;/a&gt;&lt;/li&gt;             &lt;/ul&gt;           &lt;/div&gt;         &lt;/div&gt;",
+	"model":"&lt;div class=\"news\"&gt;           &lt;div class=\"title\"&gt;&lt;h3&gt;Hanjst新闻/News&lt;/&gt;&lt;hr/&gt;&lt;/div&gt;           &lt;div class=\"content\"&gt;             &lt;ul class=\"cont\" tpldata=\"newslist::repeat::\"&gt; 			{for (var $k in $newslist)}               &lt;li&gt;&lt;a class=\"btn_show\" href=\"{$newslist[$k]['href']}\"&gt; {$newslist[$k]['title']} 		&lt;a name=\"atag\" tpldata=\"atag::updatevalue\"&gt;{$newslist[$k]['title']}&lt;/a&gt; 	&lt;/a&gt; 				{if $newslist[$k]['title'].length &gt; 25 } 	&lt;span&gt;Length is too long!&lt;/span&gt; 				{else} 					&lt;span&gt;Length is okay.&lt;/span&gt; 				{/if} 			  &lt;/li&gt; 			{/for}    &lt;/ul&gt;           &lt;/div&gt;           &lt;div class=\"pages\"&gt;             &lt;ul&gt;   &lt;/ul&gt;           &lt;/div&gt;         &lt;/div&gt;",
 	
 	"pagefooter":"&lt;div id=\"footer\"&gt;   &lt;script&gt; 	if(1==1){console.log(\"2nd 1==1.\"+(new Date()));} 	else if(2==2) 	{if(3==3){console.log(\"2nd 3==3\"+(new Date()));};}; function aFunc(myi){if (1==1){console.log(\"this is in aFunc \"+(new Date())+''+myi); return ('now:'+(new Date())+''+myi);}}   &lt;/script&gt;     &lt;div class=\"f_box\"&gt;       &lt;div class=\"f_logo\"&gt;         &lt;/div&gt;      &lt;div class=\"f_menu\"&gt;         &lt;ul&gt;           &lt;li&gt;&lt;a href=\"#\"&gt;联系Hanjst&lt;/a&gt;&lt;/li&gt;   &copy; &lt;span tpldata=\"copyright_year::updatevalue::\"&gt;{$copyright_year}&lt;/span&gt; &lt;a href=\"/\"&gt;-UFQI&lt;/a&gt;. All rights reversed.&lt;/li&gt;         &lt;/ul&gt;       &lt;/div&gt;       &lt;div class=\"allright_2\" onclick=\"javascript:if(1==1){aFunc();}else{if(1==1){aFunc();}}\"&gt;Hanjst, Han JavaScript Template Engine&lt;/div&gt;     &lt;/div&gt;   &lt;/div&gt;"
 }

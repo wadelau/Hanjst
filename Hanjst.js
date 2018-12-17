@@ -1,5 +1,6 @@
 //-
 //- Hanjst
+//- 汉吉斯特
 /* 
  * Han JavaScript Template Engine
  * --- The template semantic, syntax and its engine ---
@@ -232,9 +233,9 @@ window.Hanjst = window.HanjstDefault;
 		//- main body of main function
 		//- loop over tplSegment for tags interpret
 		var tpl2code, tpl2codeArr; segStr = ''; segi = 0;
-		tpl2codeArr = []; tpl2codeArr.push("var tpl2js = [];");
+		tpl2codeArr = []; tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
-		var tmpArr, containsEqual, tmpIfPos;
+		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr;
 		for(segi in tplSegment){ //- loop over segments besides originals
 			segStr = tplSegment[segi];
 			if(segStr.indexOf(unParseTag) > -1){ //- literal scripts
@@ -246,13 +247,19 @@ window.Hanjst = window.HanjstDefault;
 			}
 			else{ //- mixed tpl content, unspecified
 				//- parse all tpl tags with match
-				segStr = segStr.replace(parseTag, ''); lastpos = 0;
+				segStr = segStr.replace(parseTag, ''); lastpos = 0; 
+				hasLoopElse = false; loopElseStr = '';
 				while(match = tplRe.exec(segStr)){
 					ipos = match.index;
 					staticStr = segStr.substring(lastpos, ipos);
 					staticStr = staticStr.replace(/"/g, '\\"');
 					if(staticStr != ''){
-						tpl2codeArr.push("\ttpl2js.push(\""+staticStr+"\");");
+						if(hasLoopElse){
+							loopElseStr = staticStr;
+						}
+						else{
+							tpl2codeArr.push("\ttpl2js.push(\""+staticStr+"\");");
+						}
 					}
 					//console.log(match);
 					matchStr = match[0]; containsBracket = false;
@@ -293,7 +300,7 @@ window.Hanjst = window.HanjstDefault;
 						}
 					}
 					else{ //- directives
-						needSemiComma = true;
+						needSemiComma = true; 
 						if(exprStr.match(/(^( )?(if|for|while|switch|case|break))(.*)?/g)){
 							blockBeginRe = /^(if|for|while|switch)(.*)/gm; // why re-init?
 							if(tmpmatch = blockBeginRe.exec(exprStr)){
@@ -303,7 +310,13 @@ window.Hanjst = window.HanjstDefault;
 									tmpArr = tmpmatch[2].substring(5).split(' as ');
 									tmpmatch[2] = 'var ' + tmpArr[1] + ' in ' + tmpArr[0];
 								}
-								if(tmpmatch[2].indexOf('(') == -1){
+								else if(tmpmatch[2].indexOf('eachelse') == 0
+									|| tmpmatch[2].indexOf('else') == 0){ 
+									//- foreachelse, forelse, whileelse
+									hasLoopElse = true;
+									exprStr = '\tblockLoopCount += 1';
+								}
+								if(tmpmatch[2].indexOf('(') == -1 && !hasLoopElse){
 									if(isDebug){
 									console.log(logTag+"illegal tpl sentence:["
 										+exprStr+"] but compatible.");
@@ -314,7 +327,9 @@ window.Hanjst = window.HanjstDefault;
 							else{
 								if(isDebug){ console.log("not blockBegin? "+exprStr+""); }
 							}
-							exprStr += '{'; needSemiComma = false;
+							if(!hasLoopElse){ 
+								exprStr += '{'; needSemiComma = false;
+							}
 						}
 						else if(exprStr.indexOf('else') == 0){ //- if branch
 							tmpIfPos = exprStr.indexOf('if ');
@@ -330,6 +345,12 @@ window.Hanjst = window.HanjstDefault;
 						}
 						else if(exprStr.indexOf('/') == 0){ //- end of a block
 							exprStr = '}'; needSemiComma = false;
+							if(hasLoopElse){
+								exprStr += '\n\tif(blockLoopCount < 1){ tpl2js.push("'
+									+loopElseStr+'"); }';
+								hasLoopElse = false;
+								exprStr += '\n\tblockLoopCount = 0;';
+							}
 						}
 						if(exprStr.indexOf('t;') > -1){
 							exprStr = exprStr.replace('&gt;', '>');
@@ -534,6 +555,7 @@ window.Hanjst = window.HanjstDefault;
  * Dec 04, 2018, +tpl2code string to array, +foreach
  * Dec 08, 2018, +else if, +embedded tpl in <>
  * Dec 16, 2018, +literal
+ * Jan 01, 2019, +foreachelse, forelse, whileelse
  *
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
