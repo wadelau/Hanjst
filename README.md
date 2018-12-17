@@ -90,6 +90,8 @@ Features:
             {/if}
         </li>
     </ul>
+{foreachelse}
+	<ul><li>No Data.</li></ul>
 {/foreach}
 </div>
 
@@ -104,6 +106,8 @@ Try to list an associative list:
         Id: {$userlist[$k]['id']}, 
         Name: {$userlist[$k]['name'].substring(0, 20)}
     </li>
+{forelse}
+	<li>No User.</li>
 {/for}
 </div>
 
@@ -119,6 +123,8 @@ Give random numbers:
         line {$i} 
     </li>
 	{$i++}
+{whileelse}
+	<li>No Random Number.</li>
 {/while}
 
 </div>
