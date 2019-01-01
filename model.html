@@ -1,0 +1,26 @@
+<!-- Hanjst model tpl -->
+<div class="news">
+	<div class="title">
+		<h3>Hanjst新闻/News</><hr/>
+	</div>
+	<div class="content">
+		<ul class="cont" tpldata="newslist::repeat::">
+		{for (var $k in $newslist)}
+			<li>
+				<a class="btn_show" href="{$newslist[$k]['href']}"> {$newslist[$k]['title']}
+				</a>				
+				<a name="atag" tpldata="atag::updatevalue">{$newslist[$k]['title']}
+				</a>
+ 				{if $newslist[$k]['title'].length > 25 }
+					<span>Length is too long!</span> 		
+				{else}
+					<span>Length is okay.</span>
+				{/if}
+			</li>
+		{/for}
+		</ul>
+	</div>
+	<div class="pages">
+		<ul></ul>
+	</div>
+</div>

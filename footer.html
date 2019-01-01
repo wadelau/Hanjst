@@ -1,0 +1,36 @@
+<!-- Hanjst footer tpl -->
+<div id="footer">
+	<script>
+		if(1==1){
+			console.log("2nd 1==1."+(new Date()));
+		}
+		else if(2==2){
+			if(3==3){
+				console.log("2nd 3==3"+(new Date()));
+			};
+		};
+		function aFunc(myi){
+			if(1==1){
+				console.log("this is in aFunc "+(new Date())+''+myi); 
+				return ('now:'+(new Date())+''+myi);
+			};
+		};
+	</script>
+	<div class="f_box">
+		<div class="f_logo">
+		</div>
+		<div class="f_menu">
+		<ul>
+			<li><a href="#">联系Hanjst</a></li>
+			&copy; 
+			<span tpldata="copyright_year::updatevalue::">
+				{$copyright_year}
+			</span>
+			<a href="/">-UFQI</a>. All rights reversed.</li>
+		</ul>
+		</div>
+		<div class="allright_2" onclick="javascript:if(1==1){aFunc();}else{if(1==1){aFunc();}}">
+			Hanjst, Han JavaScript Template Engine
+		</div>
+	</div>
+</div>
