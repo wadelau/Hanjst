@@ -83,13 +83,14 @@ window.Hanjst = window.HanjstDefault;
 		tplDataStr = null;
 	}
 	else{
+        window.$copyright_year = (new Date()).getFullYear();
 		console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
 	}
 	tplData = null;
 	
 	//- main function
 	//- parse all tag blocks
-	console.log("aft parse copyright_year:"+$copyright_year);
+	if(isDebug){ console.log("aft parse copyright_year:"+$copyright_year); }
 	var renderTemplate = function(window, document, tplHTML){
 		
 		//- tpl keywords and patterns
@@ -115,6 +116,7 @@ window.Hanjst = window.HanjstDefault;
 			}
 		}
 		else{ tplRaw = tplHTML; }
+        tplRaw = _remedyMemoLine(tplRaw);
 		tplRaw = tplRaw.replace(/[\n|\r]/g, '');
 		//console.log(tplRaw);
 		
@@ -130,6 +132,7 @@ window.Hanjst = window.HanjstDefault;
 			//console.log(match);
 			matchStr = match[0]; exprStr = match[1];
 			tmpCont = (new Function("return "+exprStr+";")).apply();
+            tmpCont = _remedyMemoLine(tmpCont);
 			tmpCont = tmpCont.replace(/[\n|\r]/g, '');
 			if(tmpCont.indexOf('<script') > -1){
 				tmpCont = includeScriptTagBgn + tmpCont + includeScriptTagEnd;
@@ -210,7 +213,13 @@ window.Hanjst = window.HanjstDefault;
 						staticStr = staticStr.replace(includeScriptTagEnd, '');
 					}
 					tplSegment.push(parseTag + staticStr);
-					tplSegment.push(exprStr);
+                    if(exprStr.indexOf('document.write') > -1){
+                        /* should skip */
+                        if(isDebug){ console.log(logTag+"found 'document.write' and skip..."); }
+                    }
+                    else{
+					    tplSegment.push(exprStr);
+                    }
 					lastpos = ipos + matchStr.length;
 					hasScript = true;
 				}
@@ -524,6 +533,20 @@ window.Hanjst = window.HanjstDefault;
 		}
 		return exprStr;
 	};
+
+    //- inner method
+    //- remedy for comment lines in JavaScript
+    var _remedyMemoLine = function(myCont){
+        var memoRe = /[^(:|"|'|=)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
+        var match, matchStr, segStr; var myContNew = myCont;
+		while(match = memoRe.exec(myCont)){
+            //console.log("memoRe:match:"); console.log(match);
+            matchStr = match[0]; segStr = match[1];
+            myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
+        }
+        myCont = myContNew;
+        return myCont;
+    };
 	
 	//- invoke the magic Hanjst
 	window.onload = function(){ //- wait longer?
@@ -556,6 +579,7 @@ window.Hanjst = window.HanjstDefault;
  * Dec 08, 2018, +else if, +embedded tpl in <>
  * Dec 16, 2018, +literal
  * Jan 01, 2019, +foreachelse, forelse, whileelse
+ * Fri Jan  4 03:59:42 UTC 2019, +remedyMemoLine
  *
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */

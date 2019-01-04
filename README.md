@@ -11,7 +11,7 @@ Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTM
 
 ## Introduction
 
-Hanjst is a JavaScript-based template language and its engine runs on client-side.
+Hanjst is a JavaScript-based template language and its engine runs on client-side and/or server-side.
 
 Hanjst can be written with logic expressions and it provides many similar powerful functions with backend templates.
 
@@ -174,7 +174,7 @@ Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同�
 
 ### 特征/功能
 
-+ Hanjst完全客户端解析，节省服务器端计算资源;
++ Hanjst当完全在客户端解析时，节省服务器端计算资源;
 
 + Hanjst模板语言独立，不与服务器端资源做任何绑定；
 
