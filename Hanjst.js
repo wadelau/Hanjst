@@ -17,6 +17,9 @@
 
 //- Hanjst configs, modify at your conveniences
 if(!window){ window = {}; } //- why this?
+if (typeof window.console == "undefined") {
+    window.console = {log: function(errMsg){ window.alert(errMsg); }};
+}
 window.HanjstDefault = {
 	"TplVarTag": "$", //- variables from response starting with this, e.g. $pageTitle
 	"JsonDataId": "Hanjstjsondata", //- an html element id which holds server response json data
