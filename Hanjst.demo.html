@@ -28,12 +28,29 @@
 
 <h3>Hanjst样例/Demo</h3>
 <hr/>
+"$" is a speical and default tag served as a prefix marker for a variable in Hanjst.
+<br/>
+<br/>
 <span> Try to call a func named 'aFunc':
 {$aFunc($i)}
+<br/>
+"aFunc" is an user-defined function with JavaScript.
+<br/>
+"$aFunc($i)" is to call aFunc and display its return value.
+<br/>
+Similarly, "$alist[$i]" or "$alist[$i][$j]" is to display an element with $i as its key in a hash or array object.
 </span>
 
 <p><span>Call a built-in func:
 {$jstr.substring(0, 12)}
+<br/>
+"substring" is a built-in function for JavaScript.
+<br/>
+"jstr" is a variable from server response, which will be accessed via $jstr.
+<br/>
+"$jstr" is to display the variable "jstr".
+<br/>
+"$jstr.substring(0, 12) is to shorten the string for first 12 bytes and/or chars, then display the modified $jstr.
 </span>
 </p>
 
@@ -99,7 +116,11 @@ Try literal:<br/>
 <a name="firstb" {if $user['feedback'] eq 2} class="cls3"{/if}> This is a name, 2nd. </a>
 <br/>
 <span {if $user['feedback'] gt 4} class="cls2"{else} class="cls3"{/if}> This is a span, 2nd. </span>
-
+<p>
+Due to limitations of embedded tags in an HTML element,
+<br/>
+we introduce "lt;" as less than (<) and "gt;" as greater than(>).
+</p>
 </div>
 </p>
 

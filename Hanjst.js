@@ -59,10 +59,10 @@ window.Hanjst = window.HanjstDefault;
 	const includeScriptTagEnd = includeScriptTag + '_END';
 	
 	//- handle server response in json, 
-	//- parse it into global variables starting with this tplVarTag
+	//- parse it into global variables starting with this tplVarTag, ie, $ as the default.
 	var pageJsonElement = document.getElementById(jsonDataId);
 	var tplData = {}; // data holder
-	if(pageJsonElement){ 
+	if(pageJsonElement){
 		var tplDataStr = pageJsonElement.innerText;
 		try{
 			tplData = JSON.parse(tplDataStr);
@@ -162,7 +162,7 @@ window.Hanjst = window.HanjstDefault;
 		//console.log(tplRaw);
 		
 		//- parepare-3
-		//- parse literal scripts, self-defined literal tag?
+		//- parse literal scripts, self-defined literal tag? @todo
 		var literalRe = /\{literal\}(.*?)\{\/literal\}/gm;
 		var tplSegmentPre = []; var hasLiteralScript = false; lastpos = 0;
 		if(tplRaw.indexOf('{literal}') > -1){
@@ -242,7 +242,7 @@ window.Hanjst = window.HanjstDefault;
 		}
 		//console.log(tplSegment);
 		
-		//- main body of main function
+		//- main body of the main function
 		//- loop over tplSegment for tags interpret
 		var tpl2code, tpl2codeArr; segStr = ''; segi = 0;
 		tpl2codeArr = []; tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
@@ -400,7 +400,8 @@ window.Hanjst = window.HanjstDefault;
 		//tplParse = (function(){ return (new Function(tpl2code).apply(window)); }).apply();
 		tplParse = (new Function(tpl2code)).apply(window);
 		if(isDebug){ console.log("tplParse:"+tplParse); }
-		tplObject.innerHTML = tplParse; 
+		tplObject.innerHTML = tplParse;
+		//- release objects		
 		tpl2code = null; tpl2codeArr = null; 
 		tplRaw = null; tplParse = null; tplSegment = null;
 		
@@ -583,6 +584,7 @@ window.Hanjst = window.HanjstDefault;
  * Dec 16, 2018, +literal
  * Jan 01, 2019, +foreachelse, forelse, whileelse
  * Fri Jan  4 03:59:42 UTC 2019, +remedyMemoLine
+ * Fri Jan 11 13:48:28 UTC 2019, +codes refine
  *
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
