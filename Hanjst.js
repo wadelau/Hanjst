@@ -120,7 +120,7 @@ window.Hanjst = window.HanjstDefault;
 		}
 		else{ tplRaw = tplHTML; }
         tplRaw = _remedyMemoLine(tplRaw);
-		tplRaw = tplRaw.replace(/[\n|\r]/g, '');
+		tplRaw = tplRaw.replace(/[\n\r]/g, '');
 		//console.log(tplRaw);
 		
 		var tplSegment = []; var lastpos = 0;
@@ -136,7 +136,7 @@ window.Hanjst = window.HanjstDefault;
 			matchStr = match[0]; exprStr = match[1];
 			tmpCont = (new Function("return "+exprStr+";")).apply();
             tmpCont = _remedyMemoLine(tmpCont);
-			tmpCont = tmpCont.replace(/[\n|\r]/g, '');
+			tmpCont = tmpCont.replace(/[\n\r]/g, '');
 			if(tmpCont.indexOf('<script') > -1){
 				tmpCont = includeScriptTagBgn + tmpCont + includeScriptTagEnd;
 			}
