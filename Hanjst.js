@@ -93,7 +93,7 @@ window.Hanjst = window.HanjstDefault;
 	
 	//- main function
 	//- parse all tag blocks
-	if(isDebug){ console.log("aft parse copyright_year:"+$copyright_year); }
+	if(isDebug){ console.log(logTag+"aft parse copyright_year:"+$copyright_year); }
 	var renderTemplate = function(window, document, tplHTML){
 		
 		//- tpl keywords and patterns
@@ -120,7 +120,8 @@ window.Hanjst = window.HanjstDefault;
 		}
 		else{ tplRaw = tplHTML; }
         tplRaw = _remedyMemoLine(tplRaw);
-		tplRaw = tplRaw.replace(/[\n\r]/g, '');
+		//tplRaw = tplRaw.replace(/[\n\r]/g, '');
+		//tplRaw = tplRaw.replace(/<!--.*?-->/g, '');
 		//console.log(tplRaw);
 		
 		var tplSegment = []; var lastpos = 0;
@@ -136,7 +137,8 @@ window.Hanjst = window.HanjstDefault;
 			matchStr = match[0]; exprStr = match[1];
 			tmpCont = (new Function("return "+exprStr+";")).apply();
             tmpCont = _remedyMemoLine(tmpCont);
-			tmpCont = tmpCont.replace(/[\n\r]/g, '');
+			//tmpCont = tmpCont.replace(/[\n\r]/g, '');
+			//tmpCont = tmpCont.replace(/<!--.*?-->/g, '');
 			if(tmpCont.indexOf('<script') > -1){
 				tmpCont = includeScriptTagBgn + tmpCont + includeScriptTagEnd;
 			}
@@ -191,13 +193,14 @@ window.Hanjst = window.HanjstDefault;
 		//- parse original scripts
 		var scriptRe = /<script[^>]*>(.*?)<\/script>/gm;
 		var hasScript = false; var isIncludeScript = false; 
+		var asyncScriptArr = []; var isAsync = false; var srcPos = -1; var endTagPos = -1;
 		for(var $prei in tplSegmentPre){
 			tplRawNew = tplSegmentPre[$prei];
 			if(tplRawNew.indexOf(unParseTag) > -1){ // literal scripts
 				tplSegment.push(tplRawNew);
 			}
 			else{
-				lastpos = 0;
+				lastpos = 0; srcPos = -1; endTagPos = -1;
 				while(match = scriptRe.exec(tplRawNew)){
 					//console.log(match);
 					ipos = match.index;
@@ -208,20 +211,38 @@ window.Hanjst = window.HanjstDefault;
 					}
 					matchStr = match[0];
 					exprStr = match[1];
+					srcPos = matchStr.indexOf(' src='); 
+                    endTagPos = staticStr.indexOf(includeScriptTagEnd);
+					if(matchStr.indexOf(' async') > -1){ isAsync = true; }else{ isAsync = false; }
 					if(isIncludeScript){
-						_appendScript(exprStr);
+						if(isDebug){ console.log(logTag+"includeScript:"+exprStr+" matchStr:"+matchStr); }
+						_appendScript(exprStr, matchStr);
 					}
-					if(staticStr.indexOf(includeScriptTagEnd) > -1){
+					if(endTagPos > -1){
 						isIncludeScript = false;
 						staticStr = staticStr.replace(includeScriptTagEnd, '');
 					}
 					tplSegment.push(parseTag + staticStr);
-                    if(exprStr.indexOf('document.write') > -1){
-                        /* should skip */
-                        if(isDebug){ console.log(logTag+"found 'document.write' and skip..."); }
-                    }
-                    else{
-					    tplSegment.push(exprStr);
+					//- exclude src= in parent tpl
+                    if(isIncludeScript || srcPos < 0){
+                        if(exprStr != null && exprStr != ''){
+                            if(exprStr.indexOf('document.write') > -1){
+                                /* should skip */
+                                if(isDebug){ console.log(logTag+"found 'document.write' and skip..."); }
+                            }
+                            else{
+                                if(isAsync){
+                                    //asyncScriptArr.push(exprStr); // @todo
+                                    tplSegment.push('var tmpTimerI=window.setTimeout(function(){try{'+exprStr
+                                        +'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
+                                        +' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
+                                        + 'parseInt(Math.random()*2000+500));'); //- why two seconds?
+                                }
+                                else{
+                                    tplSegment.push(exprStr);
+                                }
+                            }
+                        }
                     }
 					lastpos = ipos + matchStr.length;
 					hasScript = true;
@@ -405,24 +426,70 @@ window.Hanjst = window.HanjstDefault;
 		tpl2code = null; tpl2codeArr = null; 
 		tplRaw = null; tplParse = null; tplSegment = null;
 		
+		//- oncomplete? @todo
+        if(true){
+            if(isDebug){
+                asyncScriptArr.push("console.log((new Date())+' "+logTag+" async scripts exec....');");
+            }
+            var asyncScripts = asyncScriptArr.join("\n");
+            if(isDebug){
+                console.log(logTag+"asyncScripts: "+asyncScripts);
+            }
+            try{
+				//- exec async scripts... @todo 
+		        (new Function(asyncScripts)).apply(window);
+            }
+            catch(e190115){};
+        }
+		
 	};
 	
 	//- inner methods
 	//- append embedded scripts into current runtime
-	var _appendScript = function(myCode) {
+	var _appendScript = function(myCode, myElement) {
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
 		var code = myCode;
-		try{
-			s.appendChild(document.createTextNode(code));
-			document.body.appendChild(s);
-		} 
-		catch(e){
-			s.text = code;
-			document.body.appendChild(s);
-		}
+        if((code == null || code == '') 
+			&& myElement != null && myElement != ''){
+            //- in case of, <script src=""/></script>
+	        var srcRe = /<script .*? src="([^"]*)"[^>]*>/gm;
+			var tmpmatch, tmpmatch2, mySrc, tmpval;
+            if(tmpmatch = srcRe.exec(myElement)){
+                //console.log(tmpmatch);
+                mySrc = tmpmatch[1];
+				//- in case, vars in src
+                var tmpTagRe = /\{\$([^\}]+)\}/gm;
+                while(tmpmatch2 = tmpTagRe.exec(mySrc)){
+                    //console.log(tmpmatch2);
+                    tmpval = (new Function("return $"+tmpmatch2[1])).apply();
+                    mySrc = mySrc.replace(tmpmatch2[0], tmpval);
+                    if(isDebug){
+                        console.log(logTag+"found vars in mySrc:"+mySrc+" tmpval:"+tmpval+" aft.");
+                    }
+                }
+            }
+            else{
+                mySrc = '';
+            }
+            s.src = mySrc; 
+        }
+        if(true){
+            try{
+                if(code != null && code != ''){
+                    code = "try{"+code+"}catch(tmpErr){ if("+isDebug+"){console.log(\""+logTag
+                        +"append embed failed 201901151438:\"+JSON.stringify(tmpErr)); } }";
+                }
+                s.appendChild(document.createTextNode(code));
+                document.body.appendChild(s);
+            }
+            catch(e){
+                s.text = code;
+                document.body.appendChild(s);
+            }
+        }
 		if(isDebug){
-			console.log('_appendScript: '+myCode+' has been appended.');
+			console.log('_appendScript: '+myCode+'/'+myElement+' has been appended.');
 		}
 	};
 	
@@ -549,6 +616,8 @@ window.Hanjst = window.HanjstDefault;
             myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
         }
         myCont = myContNew;
+		myCont = myCont.replace(/[\n\r]/g, '');
+		myCont = myCont.replace(/<!--.*?-->/g, '');
         return myCont;
     };
 	
@@ -585,6 +654,6 @@ window.Hanjst = window.HanjstDefault;
  * Jan 01, 2019, +foreachelse, forelse, whileelse
  * Fri Jan  4 03:59:42 UTC 2019, +remedyMemoLine
  * Fri Jan 11 13:48:28 UTC 2019, +codes refine
- *
+ * Tue Jan 15 11:53:30 UTC 2019, remove html comments, imprvs with appendScript
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
