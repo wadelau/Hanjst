@@ -622,13 +622,20 @@ window.Hanjst = window.HanjstDefault;
     };
 	
 	//- invoke the magic Hanjst
-	window.onload = function(){ //- wait longer?
-		renderTemplate(window, document, null);
-		if(isDebug){ 
-			console.log(logTag + "parse time \
-				cost: "+(((new Date()).getTime() - timeCostBgn)/1000) + "s");
-		}
-	};
+    var _callRender = function(){ //- wait longer?
+        renderTemplate(window, document, null);
+        if(isDebug){
+            console.log(logTag + "parse time \
+                cost: "+(((new Date()).getTime() - timeCostBgn)/1000) + "s");
+        }
+    };
+    if(window.document.body){
+        document.body.onload = _callRender; //- earlier fire than the one below
+        if(isDebug){ console.log(logTag + " fire with document.onload "+(new Date())); }
+    }
+    else{
+        window.onload = _callRender;
+    };
 	
 })(window); //- anonymous Hanjst main func end
 //- ----------------- MAGIC COMPLETE -----------------
@@ -655,5 +662,6 @@ window.Hanjst = window.HanjstDefault;
  * Fri Jan  4 03:59:42 UTC 2019, +remedyMemoLine
  * Fri Jan 11 13:48:28 UTC 2019, +codes refine
  * Tue Jan 15 11:53:30 UTC 2019, remove html comments, imprvs with appendScript
+ * Mon Feb 11 06:18:18 UTC 2019, +callRender
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
