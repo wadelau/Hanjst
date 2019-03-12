@@ -1,0 +1,29 @@
+{
+  "name": "Hanjst",
+  "version": "1.0.0",
+  "description": "Han JavaScript Template Language and Engine",
+  "main": "Hanjst.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wadelau/Hanjst.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wadelau/Hanjst/issues"
+  },
+  "homepage": "https://github.com/wadelau/Hanjst#readme",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "clean-webpack-plugin": "^2.0.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  }
+}
