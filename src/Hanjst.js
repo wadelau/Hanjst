@@ -10,6 +10,7 @@
  * @Born with GWA2， General Web Application Architecture
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
+ * @More at the page footer.
  * @Ver 1.1
  */
 
@@ -71,17 +72,29 @@ window.Hanjst = window.HanjstDefault;
 		if(!tplData['copyright_year']){ tplData['copyright_year'] = (new Date()).getFullYear(); }
 		//- parse json keys as global variables
 		//- variables starting with tplVarTag, i.e., $ as default
+		if(window){
+			//- window ready...
+		}
+		else{
+			window = {}; //- when and why?	
+			console.log('window undefined error. 201812011122.'); 
+		}
 		for(var $k in tplData){
 			//console.log("k:"+$k+" v:"+tplData[$k]);
 			if($k != null && $k != ''){
 				var $v = tplData[$k];
 				$k = tplVarTag + $k;
-				if(window){ window[$k] = $v; }
-				else{ console.log('window undefined error. 201812011122.'); }
+				if(typeof window[$k] != 'undefined'){
+						console.log(logTag+': Variables:['+$k+'] conflict error. '+
+							+' Please consider rename one of window.'+$k+' or pageJsonData.'+
+							+' 201904202305.');
+				}
+				else{
+					window[$k] = $v; //- globally unique
+				}
 			}
 		}
 		//- hide raw data
-		//pageJsonElement.style.height = '0px';
 		pageJsonElement.style.visibility = 'hidden'; // hide json data element
 		tplDataStr = null;
 	}
@@ -320,7 +333,8 @@ window.Hanjst = window.HanjstDefault;
 						}
 						else{
 							//- variables access, $a
-							tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
+							//tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
+							tpl2codeArr.push("\ttpl2js.push((typeof "+exprStr+" == 'undefined' ? '' : "+exprStr+"));");
 						}
 					}
 					else if(exprStr.match(/.*({|;|}).*/gm)
@@ -663,5 +677,7 @@ window.Hanjst = window.HanjstDefault;
  * Fri Jan 11 13:48:28 UTC 2019, +codes refine
  * Tue Jan 15 11:53:30 UTC 2019, remove html comments, imprvs with appendScript
  * Mon Feb 11 06:18:18 UTC 2019, +callRender
+ * 13:54 Friday, April 19, 2019, + check for undefined $xxx 
+ * @todo, template syntax validate, ....
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
