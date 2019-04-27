@@ -334,7 +334,7 @@ window.Hanjst = window.HanjstDefault;
 						else{
 							//- variables access, $a
 							//tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
-							tpl2codeArr.push("\ttpl2js.push((typeof "+exprStr+" == 'undefined' ? '' : "+exprStr+"));");
+							tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 						}
 					}
 					else if(exprStr.match(/.*({|;|}).*/gm)
@@ -421,13 +421,15 @@ window.Hanjst = window.HanjstDefault;
 				}
 			}
 		} // end of loop over tplSegment
+		tplRaw = null; tplSegment = null;
 		
 		//- append returns to tpl2code
 		tpl2codeArr.push("return tpl2js.join('');");
-		tpl2code = tpl2codeArr.join("\n"); tpl2codeArr = null;
-		tpl2code = "try{ " + tpl2code + "\n}\ncatch(e1635){ console.log(\""
-			+ logTag + "code exec failed.\"); console.log(e1635); "
-			+ " return ''+JSON.stringify(e1635); }\n";
+		tpl2code = tpl2codeArr.join("\n"); Hanjst.tpl2code = tpl2code; tpl2codeArr = null;
+		tpl2code = "try{ " + tpl2code + "\n}\ncatch(e1635){ var errMsg=JSON.stringify(e1635, Object.getOwnPropertyNames(e1635)); console.log(e1635);"
+            + "var tmpRegexp=/>\:([0-9]+)\:([0-9]+)/gm; var tmpmatch=null; if(tmpmatch=tmpRegexp.exec(errMsg)){ var tmpLineno=parseInt(tmpmatch[1]); tmpCharno=tmpmatch[2]; var tmpArr=Hanjst.tpl2code.split(\"\\n\"); errMsg += \"<p>Line \"+(tmpLineno-1)+\": \"+tmpArr[tmpLineno-4].replace(/</g, '&lt;')+\"</p>\"; errMsg += \"<p>Line \"+tmpLineno+\": \"+tmpArr[tmpLineno-3].replace(/</g, '&lt;')+\"</p>\"; errMsg += \"<p>Line \"+(tmpLineno+1)+\": \"+tmpArr[tmpLineno-2].replace(/</g, '&lt;')+\"</p>\"; console.log('errMsg:['+errMsg+']'); }else{ errMsg+=\"regExp:\"+tmpRegexp+\" failed.\"; }\n"
+            + "document.write(\"<p>"+ logTag +"template code exec failed.</p><p>\"+errMsg+\"</p>\"); "
+			+ "return ''+JSON.stringify(e1635); }\n";
 		
 		//- merge data and compile
 		var tplParse = '';		
@@ -437,8 +439,7 @@ window.Hanjst = window.HanjstDefault;
 		if(isDebug){ console.log("tplParse:"+tplParse); }
 		tplObject.innerHTML = tplParse;
 		//- release objects		
-		tpl2code = null; tpl2codeArr = null; 
-		tplRaw = null; tplParse = null; tplSegment = null;
+		tpl2code = null; Hanjst.tpl2code = null; tplParse = null;
 		
 		//- oncomplete? @todo
         if(true){
@@ -678,6 +679,6 @@ window.Hanjst = window.HanjstDefault;
  * Tue Jan 15 11:53:30 UTC 2019, remove html comments, imprvs with appendScript
  * Mon Feb 11 06:18:18 UTC 2019, +callRender
  * 13:54 Friday, April 19, 2019, + check for undefined $xxx 
- * @todo, template syntax validate, ....
+ * 12:48 Saturday, April 27, 2019, + readable error reporting for template erros
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
