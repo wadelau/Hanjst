@@ -108,11 +108,13 @@ window.Hanjst = window.HanjstDefault;
 	//- main function
 	//- parse all tag blocks
 	if(isDebug){ console.log(logTag+"aft parse copyright_year:"+$copyright_year); }
-	
-	var _renderTemplateRecurse = function(window, document, tplHTML){
+	var renderTemplate = function(window, document, tplHTML){
+
+		//- tpl keywords and patterns
+		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let)[^}]*)\}/gm;
 		//- collect tpl content
 		var match, tplRaw, tplObject;
-		tplObject = document.body || document;  Hanjst.tplObject = tplObject;
+		tplObject = document.body || document; 
 		if(!tplHTML || tplHTML == ''){
 			tplRaw = tplObject.innerHTML;
 			//console.log(tplRaw);
@@ -131,28 +133,27 @@ window.Hanjst = window.HanjstDefault;
 		}
 		else{ tplRaw = tplHTML; }
         tplRaw = _remedyMemoLine(tplRaw);
-
+		
+		var tplSegment = []; var lastpos = 0;
+		var staticStr, ipos, matchStr, exprStr;	
+		
 		//- prepare-1
-		//- parse include parts recursively
+		//- parse include parts
 		var includeRe = /\{include [file|content]*="([^\}]*?)"\}/gm;
-		var tplRawNew, tmpCont, matchStr, exprStr;	
-		tplRawNew = tplRaw;
+		var segi, segStr, tplRawNew, tmpCont;
+		lastpos = 0; tplRawNew = tplRaw;
 		while(match = includeRe.exec(tplRaw)){
 			//console.log(match);
 			matchStr = match[0]; exprStr = match[1];
 			tmpCont = (new Function("return "+exprStr+";")).apply();
-            tmpCont = _renderTemplateRecurse(window, document, tmpCont);
+            tmpCont = _remedyMemoLine(tmpCont);
+			if(tmpCont.indexOf('<script') > -1){
+				tmpCont = includeScriptTagBgn + tmpCont + includeScriptTagEnd;
+			}
 			tplRawNew = tplRawNew.replace(matchStr, tmpCont);
 		}
 		tplRaw = tplRawNew;
 		//console.log(tplRaw);
-		return tplRaw;
-	}
-	
-	var renderTemplate = function(window, document, tplHTML){
-		var tplSegment = [], tplRawNew, match, matchStr, exprStr; 
-		var staticStr, ipos, segi, segStr, lastpos = 0;
-		var tplRaw = _renderTemplateRecurse(window, document, tplHTML);
 		
 		//- parepare-2
 		//- fix innerHTML bug {if="" for tpl embedded in <>
@@ -251,11 +252,6 @@ window.Hanjst = window.HanjstDefault;
                             }
                         }
                     }
-                    else{
-                        console.log(logTag+"found src: exprStr:["+exprStr+"]");
-                        console.log(match);
-                        tplSegment.push(parseTag + matchStr);
-                    }
 					lastpos = ipos + matchStr.length;
 					hasScript = true;
 				}
@@ -277,12 +273,10 @@ window.Hanjst = window.HanjstDefault;
 		
 		//- main body of the main function
 		//- loop over tplSegment for tags interpret
-		segStr = ''; segi = 0; var tpl2codeArr = []; var tpl2code = '';
-		tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
+		var tpl2code, tpl2codeArr; segStr = ''; segi = 0;
+		tpl2codeArr = []; tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
 		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr;
-		//- tpl keywords and patterns
-		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let)[^}]*)\}/gm;
 		for(segi in tplSegment){ //- loop over segments besides originals
 			segStr = tplSegment[segi];
 			if(segStr.indexOf(unParseTag) > -1){ //- literal scripts
@@ -318,7 +312,7 @@ window.Hanjst = window.HanjstDefault;
 							if(exprStr.indexOf('(') > -1){ containsBracket = true;} 
 							if(exprStr.indexOf('.') > -1){ containsDot = true; }
 							if(exprStr.indexOf('=') > -1){ containsEqual = true; }
-                            if(containsBracket && !containsDot && !containsEqual){
+							if(containsBracket && !containsDot && !containsEqual){
 								//- private, $aFunc($a)
 								exprStr = exprStr.substring(1);
 								tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
@@ -438,7 +432,7 @@ window.Hanjst = window.HanjstDefault;
 		//tplParse = (function(){ return (new Function(tpl2code).apply(window)); }).apply();
 		tplParse = (new Function(tpl2code)).apply(window);
 		if(isDebug){ console.log("tplParse:"+tplParse); }
-		Hanjst.tplObject.innerHTML = tplParse;
+		tplObject.innerHTML = tplParse;
 		//- release objects		
 		tpl2code = null; Hanjst.tpl2code = null; tplParse = null;
 		
@@ -448,13 +442,16 @@ window.Hanjst = window.HanjstDefault;
                 asyncScriptArr.push("console.log((new Date())+' "+logTag+" async scripts exec....');");
             }
             var asyncScripts = asyncScriptArr.join("\n");
-            if(isDebug){ console.log(logTag+"asyncScripts: "+asyncScripts); }
+            if(isDebug){
+                console.log(logTag+"asyncScripts: "+asyncScripts);
+            }
             try{
 				//- exec async scripts... @todo 
 		        (new Function(asyncScripts)).apply(window);
             }
             catch(e190115){};
         }
+		
 	};
 	
 	//- inner methods
@@ -642,21 +639,13 @@ window.Hanjst = window.HanjstDefault;
                 cost: "+(((new Date()).getTime() - timeCostBgn)/1000) + "s");
         }
     };
-	
-	//- set a trigger to Hanjst
-    if(false){
-        if(window.document.body){
-            document.body.onload = _callRender; //- earlier fire than the one below
-            if(isDebug){ console.log(logTag + " fire with document.onload "+(new Date())); }
-        }
-        else{
-            window.onload = _callRender;
-        };
+    if(window.document.body){
+        document.body.onload = _callRender; //- earlier fire than the one below
+        if(isDebug){ console.log(logTag + " fire with document.onload "+(new Date())); }
     }
     else{
-        //- exec without delay, sync mode, immediately...
-        _callRender();
-    }
+        window.onload = _callRender;
+    };
 	
 })(window); //- anonymous Hanjst main func end
 //- ----------------- MAGIC COMPLETE -----------------
@@ -686,6 +675,5 @@ window.Hanjst = window.HanjstDefault;
  * Mon Feb 11 06:18:18 UTC 2019, +callRender
  * 13:54 Friday, April 19, 2019, + check for undefined $xxx 
  * 12:48 Saturday, April 27, 2019, + readable error reporting for template erros
- * 19:19 Sunday, May 19, 2019, + renderTemplateRecurse for deep-in include files.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
