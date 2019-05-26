@@ -100,7 +100,7 @@ window.Hanjst = window.HanjstDefault;
 		tplDataStr = null;
 	}
 	else{
-        window.$copyright_year = (new Date()).getFullYear();
+        window[tplVarTag+'copyright_year'] = (new Date()).getFullYear();
 		console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
 	}
 	tplData = null;
@@ -141,7 +141,9 @@ window.Hanjst = window.HanjstDefault;
 			//console.log(match);
 			matchStr = match[0]; exprStr = match[1];
 			tmpCont = (new Function("return "+exprStr+";")).apply();
-            tmpCont = _renderTemplateRecurse(window, document, tmpCont);
+			if(tmpCont != null && tmpCont != ''){
+				tmpCont = _renderTemplateRecurse(window, document, tmpCont);
+			}
 			tplRawNew = tplRawNew.replace(matchStr, tmpCont);
 		}
 		tplRaw = tplRawNew;
@@ -216,8 +218,7 @@ window.Hanjst = window.HanjstDefault;
 						isIncludeScript = true;
 						staticStr = staticStr.replace(includeScriptTagBgn, '');
 					}
-					matchStr = match[0];
-					exprStr = match[1];
+					matchStr = match[0]; exprStr = match[1];
 					srcPos = matchStr.indexOf(' src='); 
                     endTagPos = staticStr.indexOf(includeScriptTagEnd);
 					if(matchStr.indexOf(' async') > -1){ isAsync = true; }else{ isAsync = false; }
