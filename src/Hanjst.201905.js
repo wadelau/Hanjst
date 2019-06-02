@@ -4,12 +4,14 @@
 /* 
  * Han JavaScript Template Engine
  * --- The template semantic, syntax and its engine ---
- * 基于JavaScript通用HTML页面模板语言及其解析引擎
+ * 基于JavaScript通用HTML页面模板引擎
+ * --- 模板语义, 语法及解析引擎 ---
+ *
  * @Born with GWA2， General Web Application Architecture
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.5
+ * @Ver 1.1
  */
 
 "use strict"; //- we are serious
@@ -24,6 +26,7 @@ window.HanjstDefault = {
 	"JsonDataId": "Hanjstjsondata", //- an html element id which holds server response json data
 	"LogTag": "Hanjst", //- inner usage
 	"ParseTag": "__JSTPL__",  //- inner usage
+	"IncludeScriptTag": "Hanjst_INCLUDE_SCRIPT", //- inner usage
 	"IsDebug": false, //- verbose output in console
 };
 
@@ -51,6 +54,9 @@ window.Hanjst = window.HanjstDefault;
 	const parseTag = window.Hanjst.ParseTag; const unParseTag = '__NOT' + parseTag;
 	const tplVarTag = window.Hanjst.TplVarTag; const jsonDataId = window.Hanjst.JsonDataId; 
 	const logTag = window.Hanjst.LogTag+" "; const isDebug = window.Hanjst.IsDebug; 
+	const includeScriptTag = window.Hanjst.IncludeScriptTag;
+	const includeScriptTagBgn = includeScriptTag + '_BGN';
+	const includeScriptTagEnd = includeScriptTag + '_END';
 	
 	var timeCostBgn = 0;
     if(isDebug){ timeCostBgn = (new Date()).getTime(); }
@@ -210,47 +216,58 @@ window.Hanjst = window.HanjstDefault;
 					//console.log(match);
 					ipos = match.index;
 					staticStr = tplRawNew.substring(lastpos, ipos);
-					matchStr = match[0]; exprStr = match[1];
-					srcPos = matchStr.indexOf(' src=');
-					if(matchStr.indexOf(' async') > -1){ isAsync = true; }else{ isAsync = false; }
-					if(exprStr != null && exprStr != ''){
-						if(exprStr.indexOf('document.write') > -1){
-							/* should skip */
-							if(isDebug){ console.log(logTag+"found 'document.write' and skip..."); }
-						}
-						else{
-							if(isAsync){
-								//asyncScriptArr.push(exprStr); // @todo
-								tplSegment.push('var tmpTimerI=window.setTimeout(function(){try{'+exprStr
-									+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
-									+' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
-									+ 'parseInt(Math.random()*2000+1000));'); //- why two seconds?
-							}
-							else{
-								if(isDebug){ 
-									console.log(logTag+"includeScript:"+exprStr+" matchStr:"+matchStr);
-								}
-								appendScript(exprStr, matchStr);
-							}
-						}
+					if(staticStr.indexOf(includeScriptTagBgn) > -1){
+						isIncludeScript = true;
+						staticStr = staticStr.replace(includeScriptTagBgn, '');
 					}
-					else if(srcPos > 0){
-						if(isAsync){
-							tplSegment.push('var tmpTimerI=window.setTimeout(function(){try{ Hanjst.appendScript(\''+exprStr+'\', \''+matchStr+'\');' 
-									+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
-									+' found error with embed src scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
-									+ 'parseInt(Math.random()*2000+1000));');
-						}
-						else{
-							appendScript(exprStr, matchStr);
-						}
+					matchStr = match[0]; exprStr = match[1];
+					srcPos = matchStr.indexOf(' src='); 
+                    endTagPos = staticStr.indexOf(includeScriptTagEnd);
+					if(matchStr.indexOf(' async') > -1){ isAsync = true; }else{ isAsync = false; }
+					if(isIncludeScript){
+						if(isDebug){ console.log(logTag+"includeScript:"+exprStr+" matchStr:"+matchStr); }
+						_appendScript(exprStr, matchStr);
+					}
+					if(endTagPos > -1){
+						isIncludeScript = false;
+						staticStr = staticStr.replace(includeScriptTagEnd, '');
 					}
 					tplSegment.push(parseTag + staticStr);
+					//- exclude src= in parent tpl
+                    if(isIncludeScript || srcPos < 0){
+                        if(exprStr != null && exprStr != ''){
+                            if(exprStr.indexOf('document.write') > -1){
+                                /* should skip */
+                                if(isDebug){ console.log(logTag+"found 'document.write' and skip..."); }
+                            }
+                            else{
+                                if(isAsync){
+                                    //asyncScriptArr.push(exprStr); // @todo
+                                    tplSegment.push('var tmpTimerI=window.setTimeout(function(){try{'+exprStr
+                                        +'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
+                                        +' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
+                                        + 'parseInt(Math.random()*2000+500));'); //- why two seconds?
+                                }
+                                else{
+                                    tplSegment.push(exprStr);
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        console.log(logTag+"found src: exprStr:["+exprStr+"]");
+                        console.log(match);
+                        tplSegment.push(parseTag + matchStr);
+                    }
 					lastpos = ipos + matchStr.length;
 					hasScript = true;
 				}
 				if(hasScript){
 					staticStr = tplRawNew.substring(lastpos); // remainings
+					if(staticStr.indexOf(includeScriptTagEnd) > -1){
+						isIncludeScript = false;
+						staticStr = staticStr.replace(includeScriptTagEnd, '');
+					}
 					tplSegment.push(parseTag + staticStr);
 				}
 				else{
@@ -288,7 +305,7 @@ window.Hanjst = window.HanjstDefault;
 					staticStr = staticStr.replace(/"/g, '\\"');
 					if(staticStr != ''){
 						if(hasLoopElse){
-							loopElseStr += staticStr; // empty after every loop at end
+							loopElseStr = staticStr;
 						}
 						else{
 							tpl2codeArr.push("\ttpl2js.push(\""+staticStr+"\");");
@@ -320,12 +337,8 @@ window.Hanjst = window.HanjstDefault;
 						}
 						else{
 							//- variables access, $a
-							if(hasLoopElse){
-								loopElseStr += "\"+"+exprStr+"+\""; // why only this? allow limited support for variables in xxxelse scope.
-							}
-							else{
-								tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
-							}
+							//tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
+							tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 						}
 					}
 					else if(exprStr.match(/.*({|;|}).*/gm)
@@ -351,8 +364,8 @@ window.Hanjst = window.HanjstDefault;
 								else if(tmpmatch[2].indexOf('eachelse') == 0
 									|| tmpmatch[2].indexOf('else') == 0){ 
 									//- foreachelse, forelse, whileelse
-									tpl2codeArr.push('\tblockLoopCount += 1;'); //- skip first else sentence
-									exprStr = '';  hasLoopElse = true;
+									hasLoopElse = true;
+									exprStr = '\tblockLoopCount += 1';
 								}
 								if(tmpmatch[2].indexOf('(') == -1 && !hasLoopElse){
 									if(isDebug){
@@ -386,28 +399,21 @@ window.Hanjst = window.HanjstDefault;
 							if(hasLoopElse){
 								exprStr += '\n\tif(blockLoopCount < 1){ tpl2js.push("'
 									+loopElseStr+'"); }';
-								hasLoopElse = false; loopElseStr = ''; //- re-init
+								hasLoopElse = false;
 								exprStr += '\n\tblockLoopCount = 0;';
 							}
 						}
-						if(exprStr != ''){
-							if(exprStr.indexOf('t;') > -1){
-								exprStr = exprStr.replace('&gt;', '>');
-								exprStr = exprStr.replace('&lt;', '<');
-							}
-							if(needSemiComma){ exprStr += ';'; }
-							if(exprStr.match(/ (eq|lt|gt) /)){
-								exprStr = exprStr.replace('eq', '==')
-									.replace('lt', '<')
-									.replace('gt', '>');
-							}
+						if(exprStr.indexOf('t;') > -1){
+							exprStr = exprStr.replace('&gt;', '>');
+							exprStr = exprStr.replace('&lt;', '<');
 						}
-						if(hasLoopElse){ // skip first sentence
-							loopElseStr += exprStr;
+						if(needSemiComma){ exprStr += ';'; }
+						if(exprStr.match(/ (eq|lt|gt) /)){
+							exprStr = exprStr.replace('eq', '==')
+								.replace('lt', '<')
+								.replace('gt', '>');
 						}
-						else{
-							tpl2codeArr.push("\n" + exprStr);
-						}
+						tpl2codeArr.push("\n" + exprStr);
 					}
 					lastpos = ipos + matchStr.length;
 				}
@@ -454,8 +460,9 @@ window.Hanjst = window.HanjstDefault;
         }
 	};
 	
+	//- inner methods
 	//- append embedded scripts into current runtime
-	var appendScript = function(myCode, myElement) {
+	var _appendScript = function(myCode, myElement) {
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
 		var code = myCode;
@@ -479,29 +486,28 @@ window.Hanjst = window.HanjstDefault;
                 }
             }
             else{
-				//console.log(logTag+" not found src?:["+myElement+"]");
                 mySrc = '';
             }
             s.src = mySrc; 
         }
-		try{
-			if(code != null && code != ''){
-				code = "try{"+code+"}catch(tmpErr){ if("+isDebug+"){console.log(\""+logTag
-					+"append embed failed 201901151438:\"+JSON.stringify(tmpErr)); } }";
-			}
-			s.appendChild(document.createTextNode(code));
-			document.body.appendChild(s);
-		}
-		catch(e){
-			s.text = code;
-			document.body.appendChild(s);
-		}
+        if(true){
+            try{
+                if(code != null && code != ''){
+                    code = "try{"+code+"}catch(tmpErr){ if("+isDebug+"){console.log(\""+logTag
+                        +"append embed failed 201901151438:\"+JSON.stringify(tmpErr)); } }";
+                }
+                s.appendChild(document.createTextNode(code));
+                document.body.appendChild(s);
+            }
+            catch(e){
+                s.text = code;
+                document.body.appendChild(s);
+            }
+        }
 		if(isDebug){
-			console.log(logTag+(new Date())+' appendScript: ['+myCode+']/['+myElement+'] has been appended.');
+			console.log('_appendScript: '+myCode+'/'+myElement+' has been appended.');
 		}
 	};
-	//- export for async call
-	Hanjst.appendScript = appendScript;
 	
 	//- inner methods
 	//- search fields within a regexp match
@@ -684,7 +690,5 @@ window.Hanjst = window.HanjstDefault;
  * 13:54 Friday, April 19, 2019, + check for undefined $xxx 
  * 12:48 Saturday, April 27, 2019, + readable error reporting for template erros
  * 19:19 Sunday, May 19, 2019, + renderTemplateRecurse for deep-in include files.
- * 18:44 Friday, May 31, 2019, + allow limited support for variables in xxxelse scope, bugfix for includeScript.
- * 07:58 6/2/2019, + imprvs with _appendScript to appendScript for async call.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
