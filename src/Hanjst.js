@@ -46,10 +46,20 @@ window.Hanjst = window.HanjstDefault;
 		var errMsg="Hanjst undefined. 201812011128"; 
 		console.log(errMsg); return errMsg;
 	}
+    else{
+        var myNav = navigator.userAgent.toLowerCase();
+        if(myNav != null && myNav.indexOf("msie") > -1){
+		    var errMsg="MSIE is too old. \nPlease update it to one of "
+                +"\nMS Edge, Google Chrome or Mozilla Firefox.\n201906161036"; 
+            window.alert(errMsg); console.log(errMsg); console.log("UA:"+myNav);
+            return errMsg;
+        }
+    }
+
 	//- constants
-	const parseTag = window.Hanjst.ParseTag; const unParseTag = '__NOT' + parseTag;
-	const tplVarTag = window.Hanjst.TplVarTag; const jsonDataId = window.Hanjst.JsonDataId; 
-	const logTag = window.Hanjst.LogTag+" "; const isDebug = window.Hanjst.IsDebug;
+	var parseTag = window.Hanjst.ParseTag; var unParseTag = '__NOT' + parseTag;
+	var tplVarTag = window.Hanjst.TplVarTag; var jsonDataId = window.Hanjst.JsonDataId; 
+	var logTag = window.Hanjst.LogTag+" "; var isDebug = window.Hanjst.IsDebug;
 	
 	var timeCostBgn = 0;
     if(isDebug){ timeCostBgn = (new Date()).getTime(); }
@@ -463,6 +473,18 @@ window.Hanjst = window.HanjstDefault;
 		
 		//- oncomplete and raise asyncScripts
         if(true){
+            var loadingLayer;
+            if(typeof Hanjst.LoadingLayerId != 'undefined'){
+                loadingLayer = document.getElementById(Hanjst.LoadingLayerId);
+            }
+            else{
+                loadingLayer = document.getElementById('Hanjstloading');
+            }
+            if(loadingLayer){
+                loadingLayer.style.display = 'none';
+				loadingLayer.style.width = 0; loadingLayer.style.height = 0;
+				if(isDebug){ console.log((new Date())+" "+logTag+" loadingLayer is quiting...."); }
+            }
             var asyncScripts = asyncScriptArr.join("\n");
             if(isDebug){ console.log(logTag+"asyncScripts: "+asyncScripts); }
             try{
@@ -471,7 +493,7 @@ window.Hanjst = window.HanjstDefault;
             }
             catch(e190115){
 				console.log(logTag+"asyncScripts exec failed:"+e190115);
-			};
+			}; 
         }
 	};
 	
@@ -709,5 +731,7 @@ window.Hanjst = window.HanjstDefault;
  * 07:58 6/2/2019, + imprvs with _appendScript to appendScript for async call.
  * 16:31 Wednesday, June 5, 2019, + imprvs with parentNode=BODY
  * 19:18 Monday, June 10, 2019, + bugfix for asyncScripts.
+ * 22:29 Thursday, June 13, 2019, + loadingLayer. "<div id="Hanjstloading" style="width: 100%; height: 100%; z-index: 99;"> Xxxx Loading... 加载中... </div>" .
+ * 21:36 Thursday, June 20, 2019, + warning for MSIE browsers.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
