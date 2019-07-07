@@ -505,7 +505,7 @@ window.Hanjst = window.HanjstDefault;
         if((code == null || code == '') 
 			&& myElement != null && myElement != ''){
             //- in case of, <script src=""/></script>
-	        var srcRe = /<script .*? src="([^"]*)"[^>]*>/gm;
+	        var srcRe = /<script[^>]* src=["|']+([^"]*)["|']+[^>]*>/gm;
 			var tmpmatch, tmpmatch2, mySrc, tmpval;
             if(tmpmatch = srcRe.exec(myElement)){
                 //console.log(tmpmatch);
@@ -525,6 +525,7 @@ window.Hanjst = window.HanjstDefault;
 				//console.log(logTag+" not found src?:["+myElement+"]");
                 mySrc = '';
             }
+			//console.log((new Date())+" appendScript: mySrc:"+mySrc);
             s.src = mySrc; 
         }
 		try{
