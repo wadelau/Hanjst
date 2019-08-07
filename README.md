@@ -148,6 +148,10 @@ Try to be embedded in a html element:
 
 [Hanjst Online Demo](https://ufqi.com/dev/hanjst/Hanjst.demo.html)
 
+### Online Document and API
+
+[Hanjst Document and API](https://wadelau.github.io/hanjst/index)
+
 
 
 ---
@@ -256,3 +260,9 @@ Hanjst在HTML页面加载时被 ***window.onload*** 自动调用。模板语句�
 -R/j2SP 
 
 [Hanjst Online Demo](https://ufqi.com/dev/hanjst/Hanjst.demo.html)
+
+### Hanjst 在线文档和API
+
+### Online Document and API
+
+[Hanjst在线文档和API](https://wadelau.github.io/hanjst/index)
