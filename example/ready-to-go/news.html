@@ -1,0 +1,28 @@
+<html>
+<head>News List</head>
+<body>
+<div id="Hanjstloading" 
+	style="width:100%;height:100%;z-index:99;opacity:0.92;position:absolute;background-color:#ffffff;"> 
+	Loading... 加载中... 
+</div>
+<div id="newsList">
+<ul>
+{foreach $newsList as $n}
+	<li>
+		{foreach $newsList[$n] as $np}
+			<dt>{$np}: {$newsList[$n][$np]}</dt>
+		{/foreach}
+	</li>
+{foreachelse}
+	<li>No data.</li>
+{/foreach}
+</ul>
+</div>
+<div id="Hanjstjsondata" 
+	style="display:hidden;">
+	HANJST_JSON_DATA
+</div>
+<script type="text/javascript" src="../src/Hanjst.js" async></script>
+<noscript>JavaScript Required for Hanjst.</noscript>
+</body>
+</html>
