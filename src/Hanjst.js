@@ -77,9 +77,10 @@ window.Hanjst = window.HanjstDefault;
 	if(pageJsonElement){
 		var tplDataStr = pageJsonElement.innerText;
 		try{
+			tplDataStr = tplDataStr.trim();
 			tplData = JSON.parse(tplDataStr);
 		}
-		catch(e0939){ console.log(e0939);}
+		catch(e0939){ console.log(e0939); console.log('Error! pageJsonElement in malformat JSON. 201911071307.'); }
 		if(!tplData['copyright_year']){ tplData['copyright_year'] = (new Date()).getFullYear(); }
 		//- parse json keys as global variables
 		//- variables starting with tplVarTag, i.e., $ as default
