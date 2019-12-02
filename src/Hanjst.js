@@ -61,8 +61,8 @@ window.Hanjst = window.HanjstDefault;
 	var tplVarTag = window.Hanjst.TplVarTag; var jsonDataId = window.Hanjst.JsonDataId; 
 	var logTag = window.Hanjst.LogTag+" "; var isDebug = window.Hanjst.IsDebug;
 	
-	var timeCostBgn = 0;
-    if(isDebug){ timeCostBgn = (new Date()).getTime(); }
+	var timeCostBgn = 0; var myDate = new Date();
+    if(isDebug){ timeCostBgn = myDate.getTime(); }
 	var pageJsonElement = document.getElementById(jsonDataId);
 	//- check parent node
 	if(pageJsonElement){
@@ -81,7 +81,8 @@ window.Hanjst = window.HanjstDefault;
 			tplData = JSON.parse(tplDataStr);
 		}
 		catch(e0939){ console.log(e0939); console.log('Error! pageJsonElement in malformat JSON. 201911071307.'); }
-		if(!tplData['copyright_year']){ tplData['copyright_year'] = (new Date()).getFullYear(); }
+		if(!tplData['copyright_year']){ tplData['copyright_year'] = myDate.getFullYear(); }
+		if(!tplData['time_stamp']){ tplData['time_stamp'] = timeCostBgn; }
 		//- parse json keys as global variables
 		//- variables starting with tplVarTag, i.e., $ as default
 		if(window){
@@ -111,7 +112,7 @@ window.Hanjst = window.HanjstDefault;
 		tplDataStr = null;
 	}
 	else{
-        window[tplVarTag+'copyright_year'] = (new Date()).getFullYear();
+        window[tplVarTag+'copyright_year'] = myDate.getFullYear();
 		console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
 	}
 	tplData = null;
@@ -458,16 +459,21 @@ window.Hanjst = window.HanjstDefault;
 		tpl2codeArr.push("return tpl2js.join('');");
 		tpl2code = tpl2codeArr.join("\n"); Hanjst.tpl2code = tpl2code; tpl2codeArr = null;
 		tpl2code = "try{ " + tpl2code + "\n}\ncatch(e1635){ var errMsg=JSON.stringify(e1635, Object.getOwnPropertyNames(e1635)); console.log(e1635);"
-            + "var tmpRegexp=/>\:([0-9]+)\:([0-9]+)/gm; tmpRegexp2=/\"lineNumber\":([0-9]+)/gm; var tmpmatch=null; var tmpLineno=0; var tmpCharno=0; if(tmpmatch=tmpRegexp.exec(errMsg)){ tmpLineno=parseInt(tmpmatch[1]); tmpCharno=tmpmatch[2];}else if(tmpmatch=tmpRegexp2.exec(errMsg)){tmpLineno = parseInt(tmpmatch[1]);}; if(tmpLineno>0){var tmpArr=Hanjst.tpl2code.split(\"\\n\"); errMsg += \"<p>Line \"+(tmpLineno-1)+\": \"+tmpArr[tmpLineno-4].replace(/</g, '&lt;')+\"</p>\"; errMsg += \"<p>Line \"+tmpLineno+\": \"+tmpArr[tmpLineno-3].replace(/</g, '&lt;')+\"</p>\"; errMsg += \"<p>Line \"+(tmpLineno+1)+\": \"+tmpArr[tmpLineno-2].replace(/</g, '&lt;')+\"</p>\"; console.log('errMsg:['+errMsg+']'); }else{ errMsg+=\"regExp:\"+tmpRegexp+\" failed.\"; }\n"
+            + "var tmpRegexp=/>\:([0-9]+)\:([0-9]+)/gm; var tmpRegexp2=/\"lineNumber\":([0-9]+)/gm; var tmpmatch=null; var tmpLineno=0; var tmpCharno=0; if(tmpmatch=tmpRegexp.exec(errMsg)){ tmpLineno=parseInt(tmpmatch[1]); tmpCharno=tmpmatch[2];}else if(tmpmatch=tmpRegexp2.exec(errMsg)){tmpLineno = parseInt(tmpmatch[1]);}; if(tmpLineno>0){ if(tmpLineno<4){ tmpLineno = 4;}; var tmpArr=Hanjst.tpl2code.split(\"\\n\");  errMsg += \"<p>Line \"+(tmpLineno-1)+\": \"+tmpArr[tmpLineno-4].replace(/</g, '&lt;')+\"</p>\";  errMsg += \"<p>Line \"+tmpLineno+\": \"+tmpArr[tmpLineno-3].replace(/</g, '&lt;')+\"</p>\"; errMsg += \"<p>Line \"+(tmpLineno+1)+\": \"+tmpArr[tmpLineno-2].replace(/</g, '&lt;')+\"</p>\"; console.log('errMsg:['+errMsg+']'); }else{ errMsg+=\"regExp:\"+tmpRegexp+\" failed.\";}\n"
 			+ "errMsg=\"<p>"+ logTag +"template code exec failed.</p><p>\"+errMsg+\"</p>\";"
 			+ "return errMsg; }\n";
 		
 		//- merge data and compile
 		var tplParse = '';		
 		if(isDebug){ console.log(logTag + "tpl2code:"+tpl2code); }
-		//tplParse = (function(){ return (new Function(tpl2code).apply(window)); }).apply();
-		tplParse = (new Function(tpl2code)).apply(window);
-		if(isDebug){ console.log("tplParse:"+tplParse); }
+        try{
+		    //tplParse = (function(){ return (new Function(tpl2code).apply(window)); }).apply();
+		    tplParse = (new Function(tpl2code)).apply(window);
+		    if(isDebug){ console.log("tplParse:"+tplParse); }
+        }
+        catch(e1200){
+            console.log(JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)));
+        }
 		Hanjst.tplObject.innerHTML = tplParse;
 		//- release objects		
 		tpl2code = null; Hanjst.tpl2code = null; tplParse = null;
@@ -735,5 +741,7 @@ window.Hanjst = window.HanjstDefault;
  * 19:18 Monday, June 10, 2019, + bugfix for asyncScripts.
  * 22:29 Thursday, June 13, 2019, + loadingLayer. "<div id="Hanjstloading" style="width: 100%; height: 100%; z-index: 99;"> Xxxx Loading... 加载中... </div>" .
  * 21:36 Thursday, June 20, 2019, + warning for MSIE browsers.
+ * Sun Nov 24 11:50:36 CST 2019, + undefined exceptions.
+ * 10:12 Monday, December 2, 2019, + time_stamp.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
