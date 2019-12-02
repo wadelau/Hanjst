@@ -152,6 +152,9 @@ Try to be embedded in a html element:
 
 [Hanjst Document and API](https://wadelau.github.io/hanjst/index)
 
+### Hanjst Blog
+
+[Hanjst Blog](https://ufqi.com/blog/category/hanjst/)
 
 
 ---
@@ -269,3 +272,10 @@ Hanjst在HTML页面加载时被 ***window.onload*** 自动调用。模板语句�
 ### Online Document and API
 
 [Hanjst在线文档和API](https://wadelau.github.io/hanjst/index)
+
+### Hanjst Blog 汉吉斯特博客
+
+[Hanjst Blog 汉吉斯特博客](https://ufqi.com/blog/category/hanjst/)
+
+
+
