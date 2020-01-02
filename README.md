@@ -35,6 +35,16 @@ Hanjst can be written with logic expressions and it provides many similar powerf
 
 Put these codes at the end of &lt;body>, i.e. the last element of &lt;body>:
 
+#### Single sentence
+
+```html
+
+<script type="text/javascript" src="Hanjst.js" async></script>
+
+```
+
+#### Full sentences
+
 ```javascript
 
 <!-- other Hanjst template sentences -->
