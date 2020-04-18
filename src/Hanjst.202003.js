@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.6
+ * @Ver 1.5
  */
 
 "use strict"; //- we are serious
@@ -247,13 +247,13 @@ window.Hanjst = window.HanjstDefault;
 							else{
 								if(isAsync){
 									//asyncScriptArr.push(exprStr);
-									/* failed for function defined? */
+									/* failed for function defined. */
 									exprStr = exprStr.replace(regExp1906, "\\'");
 									tplSegment.push('var tmpTimer'+ipos+'=window.setTimeout(function(){try{'
 										+'Hanjst.appendScript(\''+exprStr+'\', \'\');'
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
-										+' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*200+100));'); //- why two seconds?
+										+' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
+										+ 'parseInt(Math.random()*2000+1000));'); //- why two seconds?
 								}
 								else{
 									if(isDebug){ 
@@ -268,8 +268,8 @@ window.Hanjst = window.HanjstDefault;
 								matchStr = matchStr.replace(regExp1906, "\\'");
 								tplSegment.push('var tmpTimer'+ipos+'=window.setTimeout(function(){try{ Hanjst.appendScript(\'\', \''+matchStr+'\');' 
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
-										+' found error with embed src scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*200+100));');
+										+' found error with embed src scripts:\"+JSON.stringify(tmpErr)+\"")}};}, '
+										+ 'parseInt(Math.random()*2000+1000));');
 							}
 							else{
 								appendScript(exprStr, matchStr);
@@ -293,7 +293,6 @@ window.Hanjst = window.HanjstDefault;
 				}
 			}
 		}
-		Hanjst.asyncScriptArr = asyncScriptArr;
 		//console.log(tplSegment);
 		
 		//- main body of the main function
@@ -301,7 +300,7 @@ window.Hanjst = window.HanjstDefault;
 		segStr = ''; segi = 0; var tpl2codeArr = []; var tpl2code = '';
 		tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
-		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr, bracketPos, dotPos;
+		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr;
 		//- tpl keywords and patterns
 		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let)[^}]*)\}/gm;
 		for(segi in tplSegment){ //- loop over segments besides originals
@@ -336,10 +335,8 @@ window.Hanjst = window.HanjstDefault;
 						//- functions and variables
 						if(exprStr.match(/(\+|\-|\*|\/|=|~|!|\()/gm)){
 							//- functions call
-							bracketPos = exprStr.indexOf('(');
-							dotPos = exprStr.indexOf('.');
-							if( bracketPos > -1){ containsBracket = true;} 
-							if( dotPos > -1){ containsDot = true; }
+							if(exprStr.indexOf('(') > -1){ containsBracket = true;} 
+							if(exprStr.indexOf('.') > -1){ containsDot = true; }
 							if(exprStr.indexOf('=') > -1){ containsEqual = true; }
                             if(containsBracket && !containsDot && !containsEqual){
 								//- private, $aFunc($a)
@@ -347,15 +344,8 @@ window.Hanjst = window.HanjstDefault;
 								tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 							}
 							else if(containsDot && !containsEqual){
-								if(dotPos < bracketPos){
-									//- built-in, $a.substring(0, 5)
-									tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
-								}
-								else{
-									//- built-in, $aFunc(0.5)
-									exprStr = exprStr.substring(1);
-									tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
-								}
+								//- built-in, $a.substring(0, 5)
+								tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 							}
 							else{
 								//- variables operations, $a++
@@ -487,14 +477,35 @@ window.Hanjst = window.HanjstDefault;
 		Hanjst.tplObject.innerHTML = tplParse;
 		//- release objects		
 		tpl2code = null; Hanjst.tpl2code = null; tplParse = null;
+		
+		//- oncomplete and raise asyncScripts
+        if(true){
+            var loadingLayer;
+            if(typeof Hanjst.LoadingLayerId != 'undefined'){
+                loadingLayer = document.getElementById(Hanjst.LoadingLayerId);
+            }
+            else{
+                loadingLayer = document.getElementById('Hanjstloading');
+            }
+            if(loadingLayer){
+                loadingLayer.style.display = 'none';
+				loadingLayer.style.width = 0; loadingLayer.style.height = 0;
+				if(isDebug){ console.log((new Date())+" "+logTag+" loadingLayer is quiting...."); }
+            }
+            var asyncScripts = asyncScriptArr.join("\n");
+            if(isDebug){ console.log(logTag+"asyncScripts: "+asyncScripts); }
+            try{
+		        //(new Function(asyncScripts)).apply(window);
+				appendScript(asyncScripts); //- in case of functions defined
+            }
+            catch(e190115){
+				console.log(logTag+"asyncScripts exec failed:"+e190115);
+			}; 
+        }
 	};
 	
 	//- append embedded scripts into current runtime
 	var appendScript = function(myCode, myElement) {
-		if(myCode == '' && myElement == ''){
-			return ;
-		}
-		else{
 		var s = document.createElement('script');
 		s.type = 'text/javascript';
 		var code = myCode;
@@ -538,8 +549,6 @@ window.Hanjst = window.HanjstDefault;
 		}
 		if(isDebug){
 			console.log(logTag+(new Date())+' appendScript: ['+myCode+']/['+myElement+'] has been appended.');
-		}
-		return ;
 		}
 	};
 	//- export for async call
@@ -673,62 +682,12 @@ window.Hanjst = window.HanjstDefault;
         return myCont;
     };
 	
-	//- show image in async way
-	//- 13:08 Friday, April 10, 2020, revised 12:25 Saturday, April 18, 2020
-	var showImageAsync = function(imgId){
-		var defSrc='data:image/png;base64,MA=='; //-?
-		if(typeof imgId == "undefined" || imgId == null || imgId == ''){
-			return ;	
-		}
-		else{
-			Hanjst.asyncScriptArr.push('if(true){var imageTimerX=window.setTimeout(function(){var tmpObj=document.getElementById(\''+imgId+'\');if(tmpObj){var dataSrc=tmpObj.getAttribute(\'data-src\');if(dataSrc&&dataSrc!=\'\'){tmpObj.src=dataSrc;}}}, 100);}');
-		}
-		return ;
-	}
-	//- export to window and Hanjst
-	if(typeof window.showImageAsync == 'undefined'){
-		window.showImageAsync = Hanjst.showImageAsync = showImageAsync;
-	}
-	else{
-		console.log(logTag + " function 'showImageAsync' conflicts. try to rename showImageAsync to another one.");
-	}
-	
 	//- invoke the magic Hanjst
     var _callRender = function(){ //- wait longer?
         renderTemplate(window, document, null);
         if(isDebug){
-            console.log(logTag + "parse time cost: "+(((new Date()).getTime() - timeCostBgn)/1000)+"s");
-        }
-		//- oncomplete and raise asyncScripts
-        if(true){
-            var loadingLayer;
-            if(typeof Hanjst.LoadingLayerId != 'undefined'){
-                loadingLayer = document.getElementById(Hanjst.LoadingLayerId);
-            }
-            else{
-                loadingLayer = document.getElementById('Hanjstloading');
-            }
-            if(loadingLayer){
-                loadingLayer.style.display = 'none';
-				loadingLayer.style.width = 0; loadingLayer.style.height = 0;
-				if(isDebug){ console.log((new Date())+" "+logTag+" loadingLayer is quiting...."); }
-            }
-            
-			//(new Function(asyncScripts)).apply(window); //- ?
-			//appendScript(asyncScripts, ''); //- in case of functions defined?
-			if(Hanjst.asyncScriptArr.length > 0){
-				var tmpTimerAsync=window.setTimeout(function(){try{
-						Hanjst.appendScript(Hanjst.asyncScriptArr.join("\n"), '');
-						Hanjst.asyncScriptArr = []; //- re-init
-					}
-					catch(tmpErr){
-						if(Hanjst.isDebug){ 
-							console.log("Hanjst: found error with asyncScripts:"+JSON.stringify(tmpErr));
-						}
-					};
-				}, parseInt(Math.random()*100)+200);
-			}
-            
+            console.log(logTag + "parse time \
+                cost: "+(((new Date()).getTime() - timeCostBgn)/1000) + "s");
         }
     };
 	
@@ -784,6 +743,6 @@ window.Hanjst = window.HanjstDefault;
  * 21:36 Thursday, June 20, 2019, + warning for MSIE browsers.
  * Sun Nov 24 11:50:36 CST 2019, + undefined exceptions.
  * 10:12 Monday, December 2, 2019, + time_stamp.
- * 10:34 Friday, April 10, 2020, + func showImage.Async
+ * 10:34 Friday, April 10, 2020, + func image.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
