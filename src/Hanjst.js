@@ -784,6 +784,6 @@ window.Hanjst = window.HanjstDefault;
  * 21:36 Thursday, June 20, 2019, + warning for MSIE browsers.
  * Sun Nov 24 11:50:36 CST 2019, + undefined exceptions.
  * 10:12 Monday, December 2, 2019, + time_stamp.
- * 10:34 Friday, April 10, 2020, + func showImage.Async
+ * 10:34 Friday, April 10, 2020, + func showImageAsync
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
