@@ -1,4 +1,4 @@
-# Hanjst
+# 🙋Hanjst
 Han JavaScript Template Language and Engine
 
 .
@@ -7,7 +7,7 @@ Han is the surname of my wife, and one of the given names of my daughter and son
 
 Han is also Chinese in Pinyin, Hànrén.
 
-Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTML template engines though it sounds ridiculous.
+🙋Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTML template engines though it sounds ridiculous.
 
 ## Introduction
 
@@ -172,7 +172,7 @@ Try to be embedded in a html element:
 ---
 
 
-# 汉吉斯特（Hanjst）
+# 🙋汉吉斯特（Hanjst）
 Han JavaScript 模板语言及引擎
 
 .
@@ -181,11 +181,11 @@ Han 是我妻子的姓(韩), 也是出现我女儿和儿子名字中的音节。
 
 Han 也是中文“汉族”的意思。
 
-Hanjst设计用来终止在HTML模板语言领域不断地“再造轮子”的活动，尽管这听起来有些怪异。
+🙋Hanjst设计用来终止在HTML模板语言领域不断地“再造轮子”的活动，尽管这听起来有些怪异。
 
 ## 介绍
 
-Hanjst是一种基于JavaScript的模板语言及解析引擎，她运行在客户端/服务器端。
+🙋Hanjst是一种基于JavaScript的模板语言及解析引擎，她运行在客户端/服务器端。
 
 Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同的功能。
 
