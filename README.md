@@ -9,6 +9,8 @@ Han is also Chinese in Pinyin, Hànrén.
 
 🙋Hanjst is intentionally designed to stop further "Reinventing the wheel" for HTML template engines though it sounds ridiculous.
 
+.
+
 ## Introduction
 
 Hanjst is a JavaScript-based template language and its engine runs on client-side and/or server-side.
@@ -183,11 +185,15 @@ Han 也是中文“汉族”的意思。
 
 🙋Hanjst设计用来终止在HTML模板语言领域不断地“再造轮子”的活动，尽管这听起来有些怪异。
 
+.
+
 ## 介绍
 
 🙋Hanjst是一种基于JavaScript的模板语言及解析引擎，她运行在客户端/服务器端。
 
 Hanjst能够表述逻辑控制，能够实现与服务器端模块语言相同的功能。
+
+.
 
 ### 特征/功能
 
@@ -271,6 +277,8 @@ Hanjst在HTML页面加载时被 ***window.onload*** 自动调用。模板语句�
 下面是一些 Hanjst 的示例代码。
 
 (参见英文版部分)
+
+.
 
 ### 在线实例
 -R/j2SP 
