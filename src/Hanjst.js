@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.6
+ * @Ver 1.7
  */
 
 "use strict"; //- we are serious
@@ -298,7 +298,7 @@ window.Hanjst = window.HanjstDefault;
 		
 		//- main body of the main function
 		//- loop over tplSegment for tags interpret
-		segStr = ''; segi = 0; var tpl2codeArr = []; var tpl2code = '';
+		segStr = ''; segi = 0; var tpl2codeArr = []; var tpl2code = ''; var varList = [];
 		tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
 		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr, bracketPos, dotPos;
@@ -358,8 +358,9 @@ window.Hanjst = window.HanjstDefault;
 								}
 							}
 							else{
-								//- variables operations, $a++
+								//- variables operations, $a++, $a=1
 								tpl2codeArr.push(exprStr + ';');
+								if(containsEqual){ varList.push(exprStr); }
 							}
 						}
 						else{
@@ -368,6 +369,7 @@ window.Hanjst = window.HanjstDefault;
 								loopElseStr += "\"+"+exprStr+"+\""; // why only this? allow limited support for variables in xxxelse scope.
 							}
 							else{
+								exprStr = _enSafeExpr(exprStr, varList);
 								tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 							}
 						}
@@ -673,6 +675,67 @@ window.Hanjst = window.HanjstDefault;
         return myCont;
     };
 	
+	//- inner method
+	//- _enSafeExpr
+	var _enSafeExpr = function(expr, varList){
+		var newExpr = expr;
+		if(expr.length > 0 && expr.startsWith(tplVarTag)){
+			var tmpPos = expr.indexOf('[');
+			var tmpExprArr = []; var tmpK = '';
+			if(tmpPos > -1){ //- objects access
+				tmpK = expr.substring(0, tmpPos);
+				if(window.hasOwnProperty(tmpK)){
+					//console.log(logTag+"_enSafeExpr: 00 goood! defined! tmpK:["+tmpK+"] tmpPos:"+tmpPos);
+				}
+				else{
+					if(isDebug){ console.log(logTag+"_enSafeExpr: 00 bad, NotDefined. tmpK:["+tmpK+"] tmpPos:"+tmpPos); }
+					tmpExprArr.push(tmpK);
+				}
+				if(expr.indexOf(']]') == -1){
+					tmpPos = expr.indexOf('[', tmpPos+1);
+					while(tmpPos > -1){
+						tmpK = expr.substring(0, tmpPos);
+						tmpExprArr.push(tmpK);
+						//console.log(logTag+"_enSafeExpr: 11 bad, NotDefined. tmpK:["+tmpK+"] tmpPos:"+tmpPos);
+						tmpPos = expr.indexOf('[', tmpPos+1);
+					}
+				}
+				else{
+					//- @todo: $hashList[$otherList['k2']['k3']]
+				}
+			}
+			else{ //- simple variables
+				tmpK = expr;
+				if(window.hasOwnProperty(tmpK)){
+					//console.log(logTag+"_enSafeExpr: 0000 goood! defined! tmpK:["+tmpK+"] tmpPos:"+tmpPos);
+				}
+				else{
+					if(isDebug){ console.log(logTag+"_enSafeExpr: 0000 bad, NotDefined. tmpK:["+tmpK+"] tmpPos:"+tmpPos); }
+					tmpExprArr.push(tmpK);
+				}
+			}
+			var arrSize = tmpExprArr.length; var hasDeclared = false; var targetC = 0;
+			for(var i=arrSize-1; i>-1; i--){
+				tmpK = tmpExprArr[i];
+				hasDeclared = false;
+				for(var j in varList){
+					if(varList[j].indexOf(tmpK+'=') > -1){
+						hasDeclared = true;
+						break;
+					} 
+				}
+				if(!hasDeclared){
+					newExpr = "(typeof "+tmpK+" == 'undefined') ? '' : ("+newExpr+")";
+					targetC++;
+				}
+			}
+			if(isDebug && targetC > 0){
+				console.log(logTag+"_enSafeExpr: undefined detected! expr:["+expr+"] newExpr:"+newExpr); 
+			}
+		}
+		return newExpr;
+	};
+	
 	//- show image in async way
 	//- 13:08 Friday, April 10, 2020, revised 12:25 Saturday, April 18, 2020
 	var showImageAsync = function(imgId){
@@ -785,5 +848,6 @@ window.Hanjst = window.HanjstDefault;
  * Sun Nov 24 11:50:36 CST 2019, + undefined exceptions.
  * 10:12 Monday, December 2, 2019, + time_stamp.
  * 10:34 Friday, April 10, 2020, + func showImageAsync
+ * 17:49 Wednesday, May 20, 2020, + _enSafeExpr.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
