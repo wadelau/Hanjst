@@ -6,10 +6,15 @@
 <meta name="keywords" content="Hanjst, Template, template engine, JavaScript, cross-platform, 汉吉斯特, 模板, 模板引擎, javascript template engine"/>
 <meta name="description" content="Hanjst is a JavaScript-based, generally-targeted template language and engine. Hanjst/汉吉斯特是一种基于JavaScript的HTML模板语言及模板引擎, javascript template engine."/>
 <title>Hanjst/汉吉斯特, Han JavaScript Template Engine</title>
+<link href="//ufqi.com/legacy/inc/ufqi-3.0.css" media="all" type="text/css" rel="stylesheet" />
 </head>
 <body><!-- contents of the body will be parsed and compiled by Hanjst -->
-<div id="Hanjstloading" style="width:100%;height:100%;z-index:99;opacity:0.92;position:absolute;background-color:#ffffff;"> Hanjst Loading... 加载中
+<div id="Hanjstloading" 
+	style="width:100%;height:100%;z-index:99;opacity:0.92;position:absolute;background-color:#ffffff;"> 
+		Hanjst Loading... 汉吉斯特加载中... 
+		</div>
 <style>span{ padding-top:30px; } a{ text-decoration:none; }</style>	
+<img src="//ufqi.com/dev/hanjst/hanjst-logo.2020.v2.png" alt="Hanjst" style="width:38%;"/>
 {include file="$pageheader"}
 
 {include file="$model"}
@@ -18,7 +23,7 @@
 {var $jstr='this is a j string'}
 <p>....</p>
 
-<div id="mynewscontentlist"><h3>Hanjst特征/Features</h3> <hr/>
+<div id="mynewscontentlist"><h3>Hanjst汉吉斯特特征/Features</h3> <hr/>
 {foreach $newscontentlist as $page}
 	<ul><li><a href="#">{$newscontentlist[$page]['title']}</a></li></ul>
 {foreachelse}
@@ -27,27 +32,32 @@
 </div>
 <p>....</p>
 
-<h3>Hanjst样例/Demo</h3>
+<h3>Hanjst汉吉斯特样例/Demo</h3>
 <hr/>
 "$" is a speical and default tag served as a prefix marker for a variable in Hanjst.
 <br/>
 <br/>
-<span> Try to call a func named 'aFunc':
+<span> Try to call a func named 'aFunc' and display its return:
+<br/>
 {$aFunc($i)}
+<br/>
 <br/>
 "aFunc" is an user-defined function with JavaScript.
 <br/>
 "$aFunc($i)" is to call aFunc and display its return value.
 <br/>
+<br/>
 Similarly, "$alist[$i]" or "$alist[$i][$j]" is to display an element with $i as its key in a hash or array object.
 </span>
 
 <p><span>Call a built-in func:
+<br/>
 {$jstr.substring(0, 12)}
 <br/>
 "substring" is a built-in function for JavaScript.
 <br/>
 "jstr" is a variable from server response, which will be accessed via $jstr.
+<br/>
 <br/>
 "$jstr" is to display the variable "jstr".
 <br/>
@@ -55,7 +65,7 @@ Similarly, "$alist[$i]" or "$alist[$i][$j]" is to display an element with $i as 
 </span>
 </p>
 
-<span id="randnum5"> Give random numbers:
+<span id="randnum5"> Give random numbers with while:
 {while $i<5}
 	<li> line {$i} </li>
 	{$i++}
@@ -101,6 +111,7 @@ Similarly, "$alist[$i]" or "$alist[$i][$j]" is to display an element with $i as 
 <!-- <a></a> -->
 <!-- -->
 <span id="literalarea">
+<br/>
 Try literal:<br/>
 {literal}
 	{if $user['feedback'] == 2}
@@ -118,21 +129,82 @@ Try literal:<br/>
 <br/>
 <span {if $user['feedback'] gt 4} class="cls2"{else} class="cls3"{/if}> This is a span, 2nd. </span>
 <p>
+<br/>
 Due to limitations of embedded tags in an HTML element,
 <br/>
-we introduce "lt;" as less than (<) and "gt;" as greater than(>).
+we introduce "lt" as less than (<) , "gt" as greater than(>) and "eq" as equal(=).
 </p>
 </div>
 </p>
 
-<p><a href="https://github.com/wadelau/Hanjst" title="Hanjst@github">Hanjst @ Github</a></p>
-
+<br/>
+<h3>Hanjst汉吉斯特在线资源/Online Resources</h3>
 <hr/>
+<p>
+<a href="https://github.com/wadelau/Hanjst" title="Hanjst@github" target="_blank">Hanjst @ Github</a>
+<br/>
+<a href="https://wadelau.github.io/hanjst/index" title="Hanjst document & api" target="_blank">Hanjst Document and API 汉吉斯特在线文档</a>
+<br/>
+<a href="//ufqi.com/blog/category/hanjst/" title="Hanjst blog" target="_blank">Hanjst Blog 汉吉斯特博客文档</a>
+<br/>
+<br/>
+本页样例可以通过查看 HTML 代码进行翻阅.
+<br/>
+<br/>
+{$num=123.456}
+格式化整数:  {$num} --> {$parseInt($num)}
 
+<br/><br/>
+新闻列表：<br/>
+{$newsList=[]}
+{$newsList[0]=new Object()}
+{$newsList[0]['id']=12}
+{$newsList[0]['title']='News-Title-12'}
+{$newsList[1]=new Object()}
+{$newsList[1]['id']=34}
+{$newsList[1]['title']='News-Title-34'}
+<ul>
+{foreach $newsList as $p}
+	<li>
+	{foreach $newsList[$p] as $pd}
+		<dt>{$pd}: {$newsList[$p][$pd]}</dt>
+	{/foreach}
+	</li>
+{foreachelse}
+	<li>No data.<li>
+{/foreach}
+</ul>
+
+{$title='Hello Wordl!'}
+{$titleLength=$title.length}
+<p>
+{if $titleLength > 50}
+	{$titleLength} is greater than 50!
+{else if $titleLength > 10}
+	{$titleLength} is greater than 10!
+{else}
+	{$titleLength} is less than 10!
+{/if}
+</p>
+
+<p>
+{$strArr2=Object.values($strArr)}
+Position of 1-b:[{$strArr2.indexOf("1-b")}]
+<br/>
+Undefined $aaBbList['a'] to empty:[{$aaBbList['a']}]
+</p>
+
+</p>
+<hr/>
+<br/>
 {include content="$pagefooter"}
 <!-- "copyright_year": 2017, -->
 <!-- Hanjst json data, content below this line will not be parsed by Hanjst -->
-<div id="Hanjstjsondata">
+<!-- put HanjstJsonData into a div with same id, globally, uniquely -->
+<div id="Hanjstjsondata" style="display:none;height:0px;width:0px;">
+<!--second try-->
+<!--HANJST_JSON_DATA-->
+<!--
 {
 	"pagetitle": "-Hanjst, Hanjst",
 	"newslist": {
@@ -165,13 +237,59 @@ we introduce "lt;" as less than (<) and "gt;" as greater than(>).
 		"userb": {"id":4567, "name":"Bob李"}
 	},
 	"atag": "Xenxin\"s Tag",
-	"pageheader":"&lt;div id=\"header\"&gt;     &lt;div class=\"h_box\"&gt;       &lt;div class=\"logo\"&gt;&lt;a href=\"#\"&gt;Hanjst, Han JavaScript Template Engine&lt;/a&gt;&lt;/div&gt;       &lt;div class=\"menu\"&gt;         &lt;ul&gt;           &lt;li&gt;&lt;a href=\"Hanjst.demo.html?ri=\"&gt;首页&lt;/a&gt;&lt;/li&gt;           &lt;li&gt;&lt;a href=\"#\"&gt;关于Hanjst&lt;/a&gt;             &lt;div class=\"submenu\"&gt;               &lt;ul&gt;                   &lt;li class=\"title\"&gt;&lt;a href=\"#\"&gt;Hanjst介绍&lt;/a&gt;&lt;/li&gt;                   &lt;li class=\"title\"&gt;&lt;a href=\"#\"&gt;Hanjst品牌&lt;/a&gt;&lt;/li&gt;   &lt;/ul&gt;             &lt;/div&gt;           &lt;/li&gt;          &lt;li&gt;&lt;a href=\"#\" class=\"active\"&gt;Hanjst in 新闻&lt;/a&gt;&lt;/li&gt;  &lt;/ul&gt;       &lt;/div&gt;     &lt;/div&gt;     &lt;div class=\"clear\"&gt;&lt;/div&gt;   &lt;/div&gt;",
-	
-	"model":"&lt;div class=\"news\"&gt;           &lt;div class=\"title\"&gt;&lt;h3&gt;Hanjst新闻/News&lt;/&gt;&lt;hr/&gt;&lt;/div&gt;           &lt;div class=\"content\"&gt;             &lt;ul class=\"cont\" tpldata=\"newslist::repeat::\"&gt; 			{for (var $k in $newslist)}               &lt;li&gt;&lt;a class=\"btn_show\" href=\"{$newslist[$k]['href']}\"&gt; {$newslist[$k]['title']} &lt;/a&gt; 		&lt;a name=\"atag\" tpldata=\"atag::updatevalue\"&gt;{$newslist[$k]['title']}&lt;/a&gt; 			{if $newslist[$k]['title'].length &gt; 25 } 	&lt;span&gt;Length is too long!&lt;/span&gt; 				{else} 					&lt;span&gt;Length is okay.&lt;/span&gt; 				{/if} 			  &lt;/li&gt; 			{/for}    &lt;/ul&gt;           &lt;/div&gt;           &lt;div class=\"pages\"&gt;             &lt;ul&gt;   &lt;/ul&gt;           &lt;/div&gt;         &lt;/div&gt;",
-	
-	"pagefooter":"&lt;div id=\"footer\"&gt;   &lt;script&gt; 	if(1==1){console.log(\"2nd 1==1.\"+(new Date()));} 	else if(2==2) 	{if(3==3){console.log(\"2nd 3==3\"+(new Date()));};}; function aFunc(myi){if (1==1){console.log(\"this is in aFunc \"+(new Date())+''+myi); return ('now:'+(new Date())+''+myi);}}   &lt;/script&gt;     &lt;div class=\"f_box\"&gt;       &lt;div class=\"f_logo\"&gt;         &lt;/div&gt;      &lt;div class=\"f_menu\"&gt;         &lt;ul&gt;           &lt;li&gt;&lt;a href=\"#\"&gt;联系Hanjst&lt;/a&gt;&lt;/li&gt;   &copy; &lt;span tpldata=\"copyright_year::updatevalue::\"&gt;{$copyright_year}&lt;/span&gt; &lt;a href=\"/\"&gt;-UFQI&lt;/a&gt;. All rights reversed.&lt;/li&gt;         &lt;/ul&gt;       &lt;/div&gt;       &lt;div class=\"allright_2\" onclick=\"javascript:if(1==1){aFunc();}else{if(1==1){aFunc();}}\"&gt;Hanjst, Han JavaScript Template Engine&lt;/div&gt;     &lt;/div&gt;   &lt;/div&gt;"
+	"pageheader":"&lt;div id=\"header\">     &lt;div class=\"h_box\">       &lt;div class=\"logo\">&lt;a href=\"#\">Hanjst, Han JavaScript Template Engine 汉吉斯特 模板语言及引擎 &lt;\/a>&lt;\/div>       &lt;div class=\"menu\">         &lt;ul>           &lt;li>&lt;a href=\"Hanjst.demo.html?ri=\">首页&lt;\/a>&lt;\/li>           &lt;li>&lt;a href=\"#\">关于Hanjst&lt;\/a>             &lt;div class=\"submenu\">               &lt;ul>                   &lt;li class=\"title\">&lt;a href=\"#\">Hanjst介绍&lt;\/a>&lt;\/li>                   &lt;li class=\"title\">&lt;a href=\"#\">Hanjst品牌&lt;\/a>&lt;\/li>   &lt;\/ul>             &lt;\/div>           &lt;\/li>          &lt;li>&lt;a href=\"#\" class=\"active\">Hanjst in 新闻&lt;\/a>&lt;\/li>  &lt;\/ul>       &lt;\/div>     &lt;\/div>     &lt;div class=\"clear\">&lt;\/div>   &lt;\/div>",
+	"model":"&lt;div class=\"news\">           &lt;div class=\"title\">&lt;h3>Hanjst汉吉斯特新闻/News&lt;\/>&lt;hr/>&lt;\/div>           &lt;div class=\"content\">             &lt;ul class=\"cont\" tpldata=\"newslist::repeat::\">{for (var $k in $newslist)}               &lt;li>&lt;a class=\"btn_show\" href=\"{$newslist[$k]['href']}\"> {$newslist[$k]['title']} &lt;\/a> &lt;a name=\"atag\" tpldata=\"atag::updatevalue\">{$newslist[$k]['title']}&lt;\/a> {if $newslist[$k]['title'].length > 25 } &lt;span>Length is too long!&lt;\/span>{else} &lt;span>Length is okay.&lt;\/span>{/if} &lt;\/li> {/for} &lt;\/ul>  &lt;\/div> &lt;div class=\"pages\">  &lt;ul>   &lt;\/ul> &lt;\/div> &lt;\/div>",
+	"pagefooter":"&lt;div id=\"footer\">   &lt;script> if(1==1){console.log(\"2nd 1==1.\"+(new Date()));} else if(2==2) {if(3==3){console.log(\"2nd 3==3\"+(new Date()));};}; function aFunc(myi){if (1==1){console.log(\"this is in aFunc \"+(new Date())+''+myi); return ('Now:'+(new Date())+' '+myi);}}   &lt;\/script>     &lt;div class=\"f_box\">       &lt;div class=\"f_logo\">         &lt;\/div>      &lt;div class=\"f_menu\">         &lt;ul>           &lt;li>&lt;a href=\"#\">联系Hanjst 汉吉斯特&lt;\/a>&lt;\/li>   &copy; &lt;span tpldata=\"copyright_year::updatevalue::\">{$copyright_year}&lt;\/span> &lt;a href=\"/\">-UFQI&lt;\/a>. All rights reversed.&lt;\/li>         &lt;\/ul>       &lt;\/div>       &lt;div class=\"allright_2\" onclick=\"javascript:if(1==1){aFunc();}else{if(1==1){aFunc();}}\">Hanjst, Han JavaScript Template Engine&lt;br/>&nbsp;&lt;\/div>     &lt;\/div>   &lt;\/div>",
+	"strArr": {"0":"0-a", "1":"1-b"},
+	"anotherHtmlStr":"&lt;a>a link&lt;\/a>&lt;script>var aa='bb';&lt;\/script>"
 }
+-->
 </div>
+<!-- or put the json in a JavaScript variable named HanjstJsonData, globally, uniquely -->
+<script>
+//- first try
+//HANJST_JSON_DATA
+var Hanjstjsondata = {
+	"pagetitle": "-Hanjst, Hanjst",
+	"newslist": {
+		"0": {"title":"基于JavaScript通用HTML页面模板引擎", "href":"#11"},
+		"1": {"title":"Hanjst模板语义, 语法及解析引擎", "href":"#10"},
+		"2": {"title":"God's return to God, Caesar's return to Caesar; ", "href":"#9"},
+		"3": {"title":"the backend runs in background, the frontend is executed in foreground.", "href":"#8"},
+		"4": {"title":"上帝的归上帝, 凯撒的归凯撒; 后端的归后台, 前端的归前台", "href":"#7"}
+	},
+	"keywords": "Wadelau, Xenxin, Hanjst",
+	"newslist_nextpage": "https://ufqi.com/#newlist_nextpage_value",
+	"newscontentlist2":{
+	},
+	"newscontentlist":{
+		"0":{"title":"Runtime in client-side, reduce computing render in server-side; 客户端解析，节省服务器端计算资源;", "content":"Runtime in client-side, reduce computing render in server-side;", "pages":3},
+		"1":{"title":"Language-independent, not-bound with backend scripts/languages; 模板语言独立，不与服务器端资源做任何绑定", "content":"Language-independent, not-bound with backend scripts/languages;", "pages":3},
+		"2":{"title":"Totally-isolated between MVC, data transfer with JSON;  纯粹的MVC，层间数据用JSON格式传递", "content":"Totally-isolated between MVC, data transfer with JSON;", "pages":2},
+		"3": {"title":"Full-support template tags with built-in logic and customerized JavaScript functions; 常见模板语言功能全支持，附带复杂而强大的JavaScript编程能力", "content":"Full-support template tags with built-in logic and customerized JavaScript functions;"},
+		"4": {"title":"No more tags language to be learned, just JavaScript; 无学习成本，直接使用JavaScript书写模板语言....", "content":"No more tags language to be learned, just JavaScript;"}
+	},
+	"user": {
+		"feedback": 2,
+		"iname": {"surname":"Wadelau", "familyname":"Lau"},
+		"age": "33"
+	},
+	"userlist2": {
+	},
+	"userlist": {
+		"usera": {"id":1234, "name":"Alice张"},
+		"userb": {"id":4567, "name":"Bob李"}
+	},
+	"atag": "Xenxin\"s Tag",
+	"pageheader":"<div id=\"header\">     <div class=\"h_box\">       <div class=\"logo\"><a href=\"#\">Hanjst, Han JavaScript Template Engine 汉吉斯特 模板语言及引擎 <\/a><\/div>       <div class=\"menu\">         <ul>           <li><a href=\"Hanjst.demo.html?ri=\">首页<\/a><\/li>           <li><a href=\"#\">关于Hanjst<\/a>             <div class=\"submenu\">               <ul>                   <li class=\"title\"><a href=\"#\">Hanjst介绍<\/a><\/li>                   <li class=\"title\"><a href=\"#\">Hanjst品牌<\/a><\/li>   <\/ul>             <\/div>           <\/li>          <li><a href=\"#\" class=\"active\">Hanjst in 新闻<\/a><\/li>  <\/ul>       <\/div>     <\/div>     <div class=\"clear\"><\/div>   <\/div>",
+	"model":"<div class=\"news\">           <div class=\"title\"><h3>Hanjst汉吉斯特新闻/News<\/><hr/><\/div>           <div class=\"content\">             <ul class=\"cont\" tpldata=\"newslist::repeat::\">{for (var $k in $newslist)}               <li><a class=\"btn_show\" href=\"{$newslist[$k]['href']}\"> {$newslist[$k]['title']} <\/a> <a name=\"atag\" tpldata=\"atag::updatevalue\">{$newslist[$k]['title']}<\/a> {if $newslist[$k]['title'].length > 25 } <span>Length is too long!<\/span>{else} <span>Length is okay.<\/span>{/if} <\/li> {/for} <\/ul>  <\/div> <div class=\"pages\">  <ul>   <\/ul> <\/div> <\/div>",
+	"pagefooter":"<div id=\"footer\">   <script> if(1==1){console.log(\"2nd 1==1.\"+(new Date()));} else if(2==2) {if(3==3){console.log(\"2nd 3==3\"+(new Date()));};}; function aFunc(myi){if (1==1){console.log(\"this is in aFunc \"+(new Date())+''+myi); return ('Now:'+(new Date())+' '+myi);}}   <\/script>     <div class=\"f_box\">       <div class=\"f_logo\">         <\/div>      <div class=\"f_menu\">         <ul>           <li><a href=\"#\">联系Hanjst 汉吉斯特<\/a><\/li>   &copy; <span tpldata=\"copyright_year::updatevalue::\">{$copyright_year}<\/span> <a href=\"/\">-UFQI<\/a>. All rights reversed.<\/li>         <\/ul>       <\/div>       <div class=\"allright_2\" onclick=\"javascript:if(1==1){aFunc();}else{if(1==1){aFunc();}}\">Hanjst, Han JavaScript Template Engine<br/>&nbsp;<\/div>     <\/div>   <\/div>",
+	"strArr": {"0":"0-a", "1":"1-b"},
+	"anotherHtmlStr":"<a>a link<\/a><script>var aa='bb';<\/script>"
+}
+
+</script>
+<!-- </div> -->
 
 <!-- 
 @todo include with scripts
@@ -193,14 +311,17 @@ function bFunc(myi){
 <script type="text/javascript" async>
 window.Hanjst = {'JsonDataId':'Hanjstjsondata', 'IsDebug': true}; // optional
 </script>
-<script type="text/javascript" src="../dist/Hanjst.mini.js" async></script>
+<!-- <script type="text/javascript" src="Hanjst.mini.js" async></script> -->
+<!-- 
+-->
+<script type="text/javascript" src="//ufqi.com/dev/hanjst/Hanjst.js" async></script>
 <noscript>JavaScript Required for Hanjst.</noscript>
 <!--
 JavaScript codes which will be run only once after Hanjst's work, 
     should be placed below here, after Hanjst, and keep in mind:
-1) 'use strict' mode, add comma for each sentence;
-2) src of Objects should be loaded in sync mode, e.g. jquery.min.js;
-3) invokes with Objects should be loaded in async mode, e.g. base.js;
--->
+	1) 'use strict' mode, add comma for each sentence;
+	2) src of Objects should be loaded in sync mode, e.g. jquery.min.js;
+	3) invokes with Objects should be loaded in async mode, e.g. base.js;
+	-->
 </body>
 </html>

@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.7
+ * @Ver 1.8
  */
 
 "use strict"; //- we are serious
@@ -63,34 +63,45 @@ window.Hanjst = window.HanjstDefault;
 	
 	var timeCostBgn = 0; var myDate = new Date();
     if(isDebug){ timeCostBgn = myDate.getTime(); }
-	var pageJsonElement = document.getElementById(jsonDataId);
-	//- check parent node
-	if(pageJsonElement){
-		var parentName = pageJsonElement.parentNode.nodeName;
-		if(parentName.toLowerCase() != 'body'){
-			console.log(logTag+'Error! parentNode:['+parentName+'] should be "BODY". Please consider to put '+logTag+' codes block under <body>. 201906040809.');
-		} 
+	var tplData = {}; // data holder
+	if(window.hasOwnProperty(jsonDataId)){
+		tplData = window[jsonDataId];
+		if(isDebug){ console.log(logTag+'jsonDataId:['+jsonDataId+'] has found in script. 202006031802.'); } 
 	}
+	else{
+		var pageJsonElement = document.getElementById(jsonDataId);
+		//- check parent node
+		if(pageJsonElement){
+			var parentName = pageJsonElement.parentNode.nodeName;
+			if(parentName.toLowerCase() != 'body'){
+				console.log(logTag+'Error! parentNode:['+parentName+'] should be "BODY". Please consider to put '+logTag+' codes block under <body>. 201906040809.');
+			} 
+		}
+		if(pageJsonElement){
+			var tplDataStr = pageJsonElement.innerText;
+			try{
+				tplDataStr = tplDataStr.trim();
+				tplData = JSON.parse(tplDataStr);
+			}
+			catch(e0939){ console.log(e0939); console.log('Error! pageJsonElement in malformat JSON. 201911071307.'); }
+			//- hide raw data
+			pageJsonElement.style.visibility = 'hidden'; // hide json data element
+			tplDataStr = null;
+		}
+		else{
+			console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
+		}
+	} //- end of pageJsonElement
 	//- handle server response in json,
 	//- parse it into global variables starting with this tplVarTag, ie, $ as the default.
-	var tplData = {}; // data holder
-	if(pageJsonElement){
-		var tplDataStr = pageJsonElement.innerText;
-		try{
-			tplDataStr = tplDataStr.trim();
-			tplData = JSON.parse(tplDataStr);
-		}
-		catch(e0939){ console.log(e0939); console.log('Error! pageJsonElement in malformat JSON. 201911071307.'); }
+	if(tplData){
 		if(!tplData['copyright_year']){ tplData['copyright_year'] = myDate.getFullYear(); }
 		if(!tplData['time_stamp']){ tplData['time_stamp'] = timeCostBgn; }
 		//- parse json keys as global variables
 		//- variables starting with tplVarTag, i.e., $ as default
-		if(window){
-			//- window ready...
-		}
-		else{
+		if(!window){
 			window = {}; //- when and why?	
-			console.log('window undefined error. 201812011122.'); 
+			console.log(logTag + 'window undefined error. 201812011122.'); 
 		}
 		for(var $k in tplData){
 			//console.log("k:"+$k+" v:"+tplData[$k]);
@@ -107,13 +118,9 @@ window.Hanjst = window.HanjstDefault;
 				}
 			}
 		}
-		//- hide raw data
-		pageJsonElement.style.visibility = 'hidden'; // hide json data element
-		tplDataStr = null;
 	}
 	else{
-        window[tplVarTag+'copyright_year'] = myDate.getFullYear();
-		console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
+		console.log(logTag+'tplData:['+tplData+'] has error. 202006041759.'); 
 	}
 	tplData = null;
 	
@@ -377,6 +384,7 @@ window.Hanjst = window.HanjstDefault;
 					else if(exprStr.match(/.*({|;|}).*/gm)
 						&& exprStr.indexOf('t;') == -1){ 
 						// exceptions, &gt; &lt;
+						matchStr = matchStr.replace(/"/g, '\\"');
 						tpl2codeArr.push("\ttpl2js.push(\""+matchStr+"\");");
 						if(isDebug){
 						console.log(logTag + "illegal tpl sentence:["+matchStr
@@ -477,14 +485,15 @@ window.Hanjst = window.HanjstDefault;
 		
 		//- merge data and compile
 		var tplParse = '';		
-		if(isDebug){ console.log(logTag + "tpl2code:"+tpl2code); }
+		if(isDebug){ console.log(logTag + "tpl2code:\n"+tpl2code); }
         try{
 		    //tplParse = (function(){ return (new Function(tpl2code).apply(window)); }).apply();
 		    tplParse = (new Function(tpl2code)).apply(window);
 		    if(isDebug){ console.log("tplParse:"+tplParse); }
         }
         catch(e1200){
-            console.log(JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)));
+			console.log(JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)));
+			//window.alert(tmpStr);
         }
 		Hanjst.tplObject.innerHTML = tplParse;
 		//- release objects		
@@ -849,5 +858,6 @@ window.Hanjst = window.HanjstDefault;
  * 10:12 Monday, December 2, 2019, + time_stamp.
  * 10:34 Friday, April 10, 2020, + func showImageAsync
  * 17:49 Wednesday, May 20, 2020, + _enSafeExpr.
+ * 09:52 Thursday, June 4, 2020, + import jsonDataId with script.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
