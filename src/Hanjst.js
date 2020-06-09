@@ -671,8 +671,14 @@ window.Hanjst = window.HanjstDefault;
     //- inner method
     //- remedy for comment lines in JavaScript
     var _remedyMemoLine = function(myCont){
-        var memoRe = /[^(:|"|'|=)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
-        var match, matchStr, segStr; var myContNew = myCont;
+		var memoRe = /\/\*([^]+?)\*\//gm; // "/* ... */" patterns
+		var match, matchStr, segStr; var myContNew = myCont;
+		while(match = memoRe.exec(myCont)){
+			//console.log("memoRe:match:"); console.log(match);
+            matchStr = match[0]; segStr = match[1];
+            myContNew = myContNew.replace(matchStr, "/*"+logTag+"DISCARD_MEMO_LINES*/");
+		}
+        memoRe = /[^(:|"|'|=)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
 		while(match = memoRe.exec(myCont)){
             //console.log("memoRe:match:"); console.log(match);
             matchStr = match[0]; segStr = match[1];
