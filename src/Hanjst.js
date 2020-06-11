@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.8
+ * @Ver 1.9
  */
 
 "use strict"; //- we are serious
@@ -310,7 +310,7 @@ window.Hanjst = window.HanjstDefault;
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
 		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr, bracketPos, dotPos;
 		//- tpl keywords and patterns
-		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let)[^}]*)\}/gm;
+		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let|=)[^}]*)\}/gm;
 		for(segi in tplSegment){ //- loop over segments besides originals
 			segStr = tplSegment[segi];
 			if(segStr.indexOf(unParseTag) > -1){ //- literal scripts
@@ -443,6 +443,10 @@ window.Hanjst = window.HanjstDefault;
 								hasLoopElse = false; loopElseStr = ''; //- re-init
 								exprStr += '\n\tblockLoopCount = 0;';
 							}
+						}
+						else if(exprStr.indexOf('=') == 0){ //- {=$i+2} , 11:40 6/11/2020
+							exprStr = exprStr.substring(1);
+							exprStr = "\ttpl2js.push("+exprStr+")";
 						}
 						if(exprStr != ''){
 							if(exprStr.indexOf('t;') > -1){
@@ -865,5 +869,6 @@ window.Hanjst = window.HanjstDefault;
  * 10:34 Friday, April 10, 2020, + func showImageAsync
  * 17:49 Wednesday, May 20, 2020, + _enSafeExpr.
  * 09:52 Thursday, June 4, 2020, + import jsonDataId with script.
+ * 11:42 6/11/2020, + {=$i+2} support.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
