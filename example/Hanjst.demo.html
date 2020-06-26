@@ -201,8 +201,8 @@ Undefined $aaBbList['a'] to empty:[{$aaBbList['a']}]
 <!-- "copyright_year": 2017, -->
 <!-- Hanjst json data, content below this line will not be parsed by Hanjst -->
 <!-- put HanjstJsonData into a div with same id, globally, uniquely -->
-<div id="Hanjstjsondata" style="display:none;height:0px;width:0px;">
-<!--second try-->
+<div style="display:none;height:0px;width:0px;">
+<!--second try, with same id as script-->
 <!--HANJST_JSON_DATA-->
 <!--
 {
@@ -246,8 +246,8 @@ Undefined $aaBbList['a'] to empty:[{$aaBbList['a']}]
 -->
 </div>
 <!-- or put the json in a JavaScript variable named HanjstJsonData, globally, uniquely -->
-<script>
-//- first try
+<script id="Hanjstjsondata">
+//- first try, with same id as div.
 //HANJST_JSON_DATA
 var Hanjstjsondata = {
 	"pagetitle": "-Hanjst, Hanjst",

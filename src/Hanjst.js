@@ -138,7 +138,7 @@ window.Hanjst = window.HanjstDefault;
 			//console.log(tplRaw);
 			var tmppos = tplRaw.indexOf(' id="'+jsonDataId+'"');
 			if(tmppos == -1){
-				tmppos = tplRaw.indexOf(' id="'+jsonDataId+'"');
+				tmppos = tplRaw.indexOf(" id='"+jsonDataId+"'");
 			}
 			if(tmppos > -1){
 				tplRaw = tplRaw.substring(0, tmppos); // discard json data
