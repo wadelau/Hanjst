@@ -118,6 +118,11 @@ window.Hanjst = window.HanjstDefault;
 				}
 			}
 		}
+		//- override random string
+		var randStr = Hanjst['RandomString'];
+		if(typeof randStr != 'undefined' && randStr != null && randStr != ''){
+			window[tplVarTag+randStr] = Math.random().toString(36).substring(2, 6);
+		}
 	}
 	else{
 		console.log(logTag+'tplData:['+tplData+'] has error. 202006041759.'); 
@@ -682,7 +687,7 @@ window.Hanjst = window.HanjstDefault;
             matchStr = match[0]; segStr = match[1];
             myContNew = myContNew.replace(matchStr, "/*"+logTag+"DISCARD_MEMO_LINES*/");
 		}
-        memoRe = /[^(:|"|'|=)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
+        memoRe = /[^(:|"|'|=|\\)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
 		while(match = memoRe.exec(myCont)){
             //console.log("memoRe:match:"); console.log(match);
             matchStr = match[0]; segStr = match[1];
