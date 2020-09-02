@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 1.9
+ * @Ver 2.0
  */
 
 "use strict"; //- we are serious
@@ -687,10 +687,17 @@ window.Hanjst = window.HanjstDefault;
             matchStr = match[0]; segStr = match[1];
             myContNew = myContNew.replace(matchStr, "/*"+logTag+"DISCARD_MEMO_LINES*/");
 		}
-        memoRe = /[^(:|"|'|=|\\)]\/\/(.*?)[\n\r]+/gm; // "//-" patterns
+        memoRe = /^[\s]*\/\/(.*?)[\n\r]*$/gm; // "//-" patterns at lines start, 21:41 2020-09-01
 		while(match = memoRe.exec(myCont)){
-            //console.log("memoRe:match:"); console.log(match);
+            //console.log("memoRe:match sta:"); console.log(match);
             matchStr = match[0]; segStr = match[1];
+            myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
+        }
+		memoRe = /[ \s;]\/\/(.*?)[\n\r]*$/gm; // "//-" patterns between a line
+		while(match = memoRe.exec(myCont)){
+            //console.log("memoRe:match btw:"); console.log(match);
+            matchStr = match[0]; segStr = match[1];
+			if(matchStr.indexOf(';')==0){ matchStr = matchStr.substring(1); }
             myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
         }
         myCont = myContNew;
@@ -875,5 +882,6 @@ window.Hanjst = window.HanjstDefault;
  * 17:49 Wednesday, May 20, 2020, + _enSafeExpr.
  * 09:52 Thursday, June 4, 2020, + import jsonDataId with script.
  * 11:42 6/11/2020, + {=$i+2} support.
+ * 21:42 2020-09-01, imprvs for regExp for remedyMemoLine.
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
