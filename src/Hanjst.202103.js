@@ -9,7 +9,7 @@
  * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.1
+ * @Ver 2.0
  */
 
 "use strict"; //- we are serious
@@ -413,19 +413,12 @@ window.Hanjst = window.HanjstDefault;
 									tpl2codeArr.push('\tblockLoopCount += 1;'); //- skip first else sentence
 									exprStr = '';  hasLoopElse = true;
 								}
-								if(!hasLoopElse){
-									var tmpBrPos = tmpmatch[2].indexOf('(');
-									var tmpDotPos = tmpmatch[2].indexOf('.');
-									if(tmpBrPos == -1){
-										exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')';
-									}
-									else if(tmpDotPos > 0 && tmpDotPos < tmpBrPos){
-										exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')';
-									}
+								if(tmpmatch[2].indexOf('(') == -1 && !hasLoopElse){
 									if(isDebug){
 									console.log(logTag+"illegal tpl sentence:["
-										+exprStr+"] but compatible. tmpBrPos:"+tmpBrPos+" tmpDotPos:"+tmpDotPos);
+										+exprStr+"] but compatible.");
 									}
+									exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')';
 								}
 							}
 							else{
@@ -508,9 +501,8 @@ window.Hanjst = window.HanjstDefault;
 		    if(isDebug){ console.log("tplParse:"+tplParse); }
         }
         catch(e1200){
-			var tmpStr = JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)); 
-			console.log(tmpStr);
-			if(isDebug){ window.alert((new Date())+':\n'+tmpStr); }
+			console.log(JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)));
+			//window.alert(tmpStr);
         }
 		Hanjst.tplObject.innerHTML = tplParse;
 		//- release objects		
@@ -891,6 +883,5 @@ window.Hanjst = window.HanjstDefault;
  * 09:52 Thursday, June 4, 2020, + import jsonDataId with script.
  * 11:42 6/11/2020, + {=$i+2} support.
  * 21:42 2020-09-01, imprvs for regExp for remedyMemoLine.
- * 09:08 2021-03-17, imprvs for debug in mobile browsers, +support for if conditionExpr
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
