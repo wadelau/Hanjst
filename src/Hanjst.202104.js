@@ -6,10 +6,10 @@
  * --- The template semantic, syntax and its engine ---
  * 基于JavaScript通用HTML页面模板语言及其解析引擎
  * @Born with GWA2， General Web Application Architecture
- * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
+ * @Xenxin@ufqi.com, Wadelau@hotmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.2
+ * @Ver 2.1
  */
 
 "use strict"; //- we are serious
@@ -93,7 +93,7 @@ window.Hanjst = window.HanjstDefault;
 		}
 	} //- end of pageJsonElement
 	//- handle server response in json,
-	//- parse it into global variables starting with this tplVarTag, i.e., $ as the default.
+	//- parse it into global variables starting with this tplVarTag, ie, $ as the default.
 	if(tplData){
 		if(!tplData['copyright_year']){ tplData['copyright_year'] = myDate.getFullYear(); }
 		if(!tplData['time_stamp']){ tplData['time_stamp'] = timeCostBgn; }
@@ -416,7 +416,6 @@ window.Hanjst = window.HanjstDefault;
 								if(!hasLoopElse){
 									var tmpBrPos = tmpmatch[2].indexOf('(');
 									var tmpDotPos = tmpmatch[2].indexOf('.');
-									tmpmatch[2] = _enSafeExprAsCondition(tmpmatch[2], varList);
 									if(tmpBrPos == -1){
 										exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')';
 									}
@@ -718,7 +717,7 @@ window.Hanjst = window.HanjstDefault;
 	//- inner method
 	//- _enSafeExpr
 	var _enSafeExpr = function(expr, varList){
-		var newExpr = expr; expr = expr.trim();
+		var newExpr = expr;
 		if(expr.length > 0 && expr.startsWith(tplVarTag)){
 			var tmpPos = expr.indexOf('[');
 			var tmpExprArr = []; var tmpK = '';
@@ -765,7 +764,7 @@ window.Hanjst = window.HanjstDefault;
 					} 
 				}
 				if(!hasDeclared){
-					newExpr = "((typeof "+tmpK+" == 'undefined') ? '' : ("+newExpr+"))";
+					newExpr = "(typeof "+tmpK+" == 'undefined') ? '' : ("+newExpr+")";
 					targetC++;
 				}
 			}
@@ -775,42 +774,7 @@ window.Hanjst = window.HanjstDefault;
 		}
 		return newExpr;
 	};
-	//- Sat Apr 24 09:43:50 UTC 2021
-	var _enSafeExprAsCondition = function(exprStr, varList){
-		var newStr = exprStr;
-		if(exprStr.indexOf('[') > -1 && exprStr.indexOf(']') > -1){
-			// if($hashList[$a][$b]==1
-			var exprStrArr = []; var exprStrArrRp = []; 
-			if(exprStr.indexOf('&&') > -1 || exprStr.indexOf('||') > -1){
-				exprStrArr = expreStr.split("/&&|\|\|/");		
-			}
-			else{
-				exprStrArr.push(exprStr);
-			}
-			var arrSize = exprStrArr.length; var segp = '';
-			var leftp = ''; var rightp = ''; var lastrpos = -1;
-			for(var i=0; i<arrSize; i++){
-				segp = exprStrArr[i];
-				lastrpos = segp.lastIndexOf(']');
-				if(lastrpos > -1){
-					leftp = segp.substring(0, lastrpos+1);
-					rightp = segp.substring(lastrpos+1);
-					leftp = _enSafeExpr(leftp, varList); // assume $hashList[$a][$b]
-					segp = leftp + rightp;
-				}
-				exprStrArrRp.push(segp);
-			}
-			// replace with safed str
-			for(var i=0; i<arrSize; i++){
-				segp = exprStrArr[i];
-				newStr = newStr.replace(segp, exprStrArrRp[i]);
-			}
-			if(isDebug){
-				console.log(logTag+"_enSafeExprAsCondition: exprStr:"+exprStr+" newStr:"+newStr);	
-			}
-		} 
-		return newStr;
-	}
+	
 	//- show image in async way
 	//- 13:08 Friday, April 10, 2020, revised 12:25 Saturday, April 18, 2020
 	var showImageAsync = function(imgId){
@@ -928,6 +892,5 @@ window.Hanjst = window.HanjstDefault;
  * 11:42 6/11/2020, + {=$i+2} support.
  * 21:42 2020-09-01, imprvs for regExp for remedyMemoLine.
  * 09:08 2021-03-17, imprvs for debug in mobile browsers, +support for if conditionExpr
- * 17:09 2021-04-26, + _enSafeExprAsCondition .
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
