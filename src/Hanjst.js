@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.2
+ * @Ver 2.3
  */
 
 "use strict"; //- we are serious
@@ -702,12 +702,14 @@ window.Hanjst = window.HanjstDefault;
             matchStr = match[0]; segStr = match[1];
             myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
         }
-		memoRe = /[ \s;]\/\/(.*?)[\n\r]*$/gm; // "//-" patterns between a line
+		memoRe = /[ \s;,:'"]\/\/(.*?)[\n\r]*$/gm; // "//-" patterns between a line
 		while(match = memoRe.exec(myCont)){
             //console.log("memoRe:match btw:"); console.log(match);
             matchStr = match[0]; segStr = match[1];
-			if(matchStr.indexOf(';')==0){ matchStr = matchStr.substring(1); }
-            myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
+			if(segStr.indexOf('.') > -1 || segStr.indexOf(':') > -1){ continue; } // pattern: //www.abc.com or //1.2.3:1234
+			//if(matchStr.indexOf(';')==0){ matchStr = matchStr.substring(1); }
+            if(true){ matchStr = matchStr.substring(1); }
+			myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
         }
         myCont = myContNew;
 		myCont = myCont.replace(/[\n\r]/g, '');
@@ -929,5 +931,6 @@ window.Hanjst = window.HanjstDefault;
  * 21:42 2020-09-01, imprvs for regExp for remedyMemoLine.
  * 09:08 2021-03-17, imprvs for debug in mobile browsers, +support for if conditionExpr
  * 17:09 2021-04-26, + _enSafeExprAsCondition .
+ * 21:32 2021-05-19, bugfix for remedyMemoLine .
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
