@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.3
+ * @Ver 2.4
  */
 
 "use strict"; //- we are serious
@@ -387,7 +387,7 @@ window.Hanjst = window.HanjstDefault;
 						}
 					}
 					else if(exprStr.match(/.*({|;|}).*/gm)
-						&& exprStr.indexOf('t;') == -1){ 
+						&& exprStr.indexOf('t;') == -1 && exprStr.indexOf('amp;') == -1){ 
 						// exceptions, &gt; &lt;
 						matchStr = matchStr.replace(/"/g, '\\"');
 						tpl2codeArr.push("\ttpl2js.push(\""+matchStr+"\");");
@@ -472,6 +472,9 @@ window.Hanjst = window.HanjstDefault;
 									.replace('lt', '<')
 									.replace('gt', '>');
 							}
+							if(exprStr.indexOf('&amp;') > -1){
+								exprStr = exprStr.replace((new RegExp("&amp;", "gm")), '&');
+							}
 						}
 						if(hasLoopElse){ // skip first sentence
 							loopElseStr += exprStr;
@@ -510,7 +513,7 @@ window.Hanjst = window.HanjstDefault;
         }
         catch(e1200){
 			var tmpStr = JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)); 
-			console.log(tmpStr);
+			console.log(tmpStr); console.log(logTag + "tpl2code: "+tpl2code);
 			if(isDebug){ window.alert((new Date())+':\n'+tmpStr); }
         }
 		Hanjst.tplObject.innerHTML = tplParse;
@@ -932,5 +935,6 @@ window.Hanjst = window.HanjstDefault;
  * 09:08 2021-03-17, imprvs for debug in mobile browsers, +support for if conditionExpr
  * 17:09 2021-04-26, + _enSafeExprAsCondition .
  * 21:32 2021-05-19, bugfix for remedyMemoLine .
+ * 12:31 2021-05-21, bugfix for &amp; .
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
