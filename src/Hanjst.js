@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.4
+ * @Ver 2.5
  */
 
 "use strict"; //- we are serious
@@ -213,6 +213,7 @@ window.Hanjst = window.HanjstDefault;
 				staticStr = tplRaw.substring(lastpos, ipos);
 				matchStr = match[0]; exprStr = match[1];
 				tplSegmentPre.push(staticStr);
+				exprStr = exprStr.replace(/"/g, '\\"');
 				tplSegmentPre.push(unParseTag + exprStr);
 				lastpos = ipos + matchStr.length;
 				hasLiteralScript = true;
@@ -313,7 +314,7 @@ window.Hanjst = window.HanjstDefault;
 		segStr = ''; segi = 0; var tpl2codeArr = []; var tpl2code = ''; var varList = [];
 		tpl2codeArr.push("var tpl2js = []; var blockLoopCount = 0;");
 		var blockBeginRe, tmpmatch, needSemiComma, containsDot, containsBracket;
-		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr, bracketPos, dotPos;
+		var tmpArr, containsEqual, tmpIfPos, hasLoopElse, loopElseStr, bracketPos, dotPos, tmpi;
 		//- tpl keywords and patterns
 		var tplRe = /\{((for|if|while|else|switch|break|case|\$|\/|var|let|=)[^}]*)\}/gm;
 		for(segi in tplSegment){ //- loop over segments besides originals
@@ -361,6 +362,7 @@ window.Hanjst = window.HanjstDefault;
 							else if(containsDot && !containsEqual){
 								if(dotPos < bracketPos){
 									//- built-in, $a.substring(0, 5)
+									exprStr = _enSafeExpr(exprStr, varList);
 									tpl2codeArr.push("\ttpl2js.push("+exprStr+");");
 								}
 								else{
@@ -371,6 +373,11 @@ window.Hanjst = window.HanjstDefault;
 							}
 							else{
 								//- variables operations, $a++, $a=1
+								tmpi = exprStr.indexOf('='+tplVarTag);  
+                                if( tmpi > 0 && exprStr.lastIndexOf('=') <= tmpi && !containsDot){
+                                    exprStr = exprStr.substring(0, tmpi)
+                                        + '=' + _enSafeExpr(exprStr.substring(tmpi+1), varList);
+                                }  
 								tpl2codeArr.push(exprStr + ';');
 								if(containsEqual){ varList.push(exprStr); }
 							}
@@ -443,8 +450,10 @@ window.Hanjst = window.HanjstDefault;
 								console.log(logTag+"illegal tpl sentence:"+exprStr
 									+" but compatible.");
 								}
-								exprStr = exprStr.substr(0, tmpIfPos+3) 
-									+ '(' + exprStr.substr(tmpIfPos+3) + ')';
+								tmpmatch = exprStr.substr(tmpIfPos+3);
+                                tmpmatch = _enSafeExprAsCondition(tmpmatch, varList);
+                                exprStr = exprStr.substr(0, tmpIfPos+3);
+                                exprStr +=  '(' + tmpmatch + ')';
 							}
 							exprStr = '}\n' + exprStr + '{'; needSemiComma = false;
 						}
@@ -514,6 +523,7 @@ window.Hanjst = window.HanjstDefault;
         catch(e1200){
 			var tmpStr = JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)); 
 			console.log(tmpStr); console.log(logTag + "tpl2code: "+tpl2code);
+			//- use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
 			if(isDebug){ window.alert((new Date())+':\n'+tmpStr); }
         }
 		Hanjst.tplObject.innerHTML = tplParse;
@@ -724,7 +734,7 @@ window.Hanjst = window.HanjstDefault;
 	//- _enSafeExpr
 	var _enSafeExpr = function(expr, varList){
 		var newExpr = expr; expr = expr.trim();
-		if(expr.length > 0 && expr.startsWith(tplVarTag)){
+		if(expr.length > 0 && expr.startsWith(tplVarTag) && expr.indexOf(' ') == -1){
 			var tmpPos = expr.indexOf('[');
 			var tmpExprArr = []; var tmpK = '';
 			if(tmpPos > -1){ //- objects access
@@ -787,7 +797,7 @@ window.Hanjst = window.HanjstDefault;
 			// if($hashList[$a][$b]==1
 			var exprStrArr = []; var exprStrArrRp = []; 
 			if(exprStr.indexOf('&&') > -1 || exprStr.indexOf('||') > -1){
-				exprStrArr = expreStr.split("/&&|\|\|/");		
+				exprStrArr = exprStr.split("/&&|\|\|/");		
 			}
 			else{
 				exprStrArr.push(exprStr);
@@ -936,5 +946,7 @@ window.Hanjst = window.HanjstDefault;
  * 17:09 2021-04-26, + _enSafeExprAsCondition .
  * 21:32 2021-05-19, bugfix for remedyMemoLine .
  * 12:31 2021-05-21, bugfix for &amp; .
+ * 09:04 2021-06-07, add more _enSafeExpr .
+ * 21:51 2021-06-29, +comment: use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
