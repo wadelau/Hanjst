@@ -524,7 +524,7 @@ window.Hanjst = window.HanjstDefault;
 			var tmpStr = JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)); 
 			console.log(tmpStr); console.log(logTag + "tpl2code: "+tpl2code);
 			//- use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
-			if(isDebug){ window.alert((new Date())+':\n'+tmpStr); }
+			if(isDebug){ window.alert((new Date())+':\n'+tmpStr+'\nUse Firefox to figure out lines detail in tpl2code.'); }
         }
 		Hanjst.tplObject.innerHTML = tplParse;
 		//- release objects		
