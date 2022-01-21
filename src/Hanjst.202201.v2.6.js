@@ -1,6 +1,6 @@
 //-
 //- Hanjst
-//- 汉吉斯特 Han Ji Si Te
+//- 汉吉斯特
 /* 
  * Han JavaScript Template Engine
  * --- The template semantic, syntax and its engine ---
@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.7
+ * @Ver 2.6
  */
 
 "use strict"; //- we are serious
@@ -38,7 +38,6 @@ if(window.Hanjst){
 	}
 }
 window.Hanjst = window.HanjstDefault;
-  
 //- ----------------- MAGIC START -----------------
 (function(window){ //- anonymous Hanjst main func bgn
 
@@ -92,9 +91,7 @@ window.Hanjst = window.HanjstDefault;
 		else{
 			console.log(logTag+'pageJsonElement:['+jsonDataId+'] has error. 201812010927'); 
 		}
-	} 
-	//- end of pageJsonElement
-	
+	} //- end of pageJsonElement
 	//- handle server response in json,
 	//- parse it into global variables starting with this tplVarTag, i.e., $ as the default.
 	if(tplData){
@@ -125,7 +122,7 @@ window.Hanjst = window.HanjstDefault;
 		var randStr = Hanjst['RandomString'];
 		if(typeof randStr != 'undefined' && randStr != null && randStr != ''){
 			window[tplVarTag+randStr] = Math.random().toString(36).substring(2, 6);
-		}															  
+		}
 	}
 	else{
 		console.log(logTag+'tplData:['+tplData+'] has error. 202006041759.'); 
@@ -265,7 +262,6 @@ window.Hanjst = window.HanjstDefault;
 									//asyncScriptArr.push(exprStr);
 									/* failed for function defined? */
 									exprStr = exprStr.replace(regExp1906, "\\'");
-									exprStr = exprStr.replace(/\\\\'/gm, '\\\\\\\''); //- \\'
 									tplSegment.push('var tmpTimer'+ipos+'=window.setTimeout(function(){try{'
 										+'Hanjst.appendScript(\''+exprStr+'\', \'\');'
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
@@ -530,7 +526,6 @@ window.Hanjst = window.HanjstDefault;
 			var tmpStr = JSON.stringify(e1200, Object.getOwnPropertyNames(e1200)); 
 			console.log(tmpStr); console.log(logTag + "tpl2code: "+tpl2code);
 			//- use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
-															   
 			if(isDebug){ window.alert((new Date())+':\n'+tmpStr+'\nUse Firefox to figure out lines detail in tpl2code.'); }
         }
 		Hanjst.tplObject.innerHTML = tplParse;
@@ -720,32 +715,23 @@ window.Hanjst = window.HanjstDefault;
 		while(match = memoRe.exec(myCont)){
             //console.log("memoRe:match sta:"); console.log(match);
             matchStr = match[0]; segStr = match[1];
-			if(myContNew.indexOf(matchStr+'\n') > -1){
-				myContNew = myContNew.replace(matchStr+'\n', "/*"+segStr+"*/");
-			}
-			if(myContNew.indexOf(matchStr+'\r') > -1){
-				myContNew = myContNew.replace(matchStr+'\r', "/*"+segStr+"*/");
-			}
+            myContNew = myContNew.replace(matchStr, "/*"+segStr+"*/");
         }
-		memoRe = /[ \s;,'"]{1}\/\/(.*?)$/gm; // "//-" patterns between a line
+		memoRe = /[ \s;,'"]+\/\/(.*)$/gm; // "//-" patterns between a line
 		var matchStrOrig = null; var matchStrFirstChar = null;
-		while(match = memoRe.exec(myCont)){									   
+		while(match = memoRe.exec(myCont)){
             matchStr = match[0]; segStr = match[1];
-             if(true && (segStr.match(/[a-zA-Z0-9\-]+?\.[a-zA-Z0-9\-]+?[:]*/gm) 
-					&& (segStr.indexOf(' ') < 0 || segStr.indexOf('/') > -1))){ continue; } // pattern: //www.abc.com or //1.2.3:1234, keep urls, 09:46 2022-01-13
+            if(true && (segStr.indexOf('.') > -1 || segStr.indexOf(':') > -1)){ continue; } // pattern: //www.abc.com or //1.2.3:1234, remove : from RegExp 21:43 2021-11-11
 			matchStrOrig = matchStr;
 			matchStrFirstChar = matchStrOrig.substring(0,1);
 			if(false){ matchStr = matchStrOrig.substring(1); } //- disabled 21:45 2021-11-11
-			myContNew = myContNew.replace(matchStrOrig, matchStrFirstChar+"/*"+segStr+"*/"); //- without regExp, Only the first occurrence will be replaced.
-			if(false){
-			console.log("memoRe:match btw: matchStr:["+matchStr+"] segStr:["+segStr+"] new:["+myContNew+"]"); 
-			}
-		}
+            myContNew = myContNew.replace(matchStrOrig, matchStrFirstChar+"/*"+segStr+"*/"); //- without regExp, Only the first occurrence will be replaced.
+			//console.log("memoRe:match btw: matchStr:["+matchStr+"] segStr:["+segStr+"] new:["+myContNew+"]"); 
+        }
 		//console.log("myCont:["+myCont+"] new:["+myContNew+"]");
         myCont = myContNew;
 		myCont = myCont.replace(/[\n\r]/g, '');
 		myCont = myCont.replace(/<!--.*?-->/g, '');
-												  
         return myCont;
     };
 	
@@ -924,7 +910,7 @@ window.Hanjst = window.HanjstDefault;
 /*
  *** Philosophy:
  * God's return to God, Caesar's return to Caesar; 
- * the backend runs in background, the frontend is being executed in foreground.
+ * the backend runs in background, the frontend is executed in foreground.
  * 上帝的归上帝, 凯撒的归凯撒; 后端的归后台, 前端的归前台。
  * 
  *** Pros:
@@ -968,6 +954,5 @@ window.Hanjst = window.HanjstDefault;
  * 09:04 2021-06-07, add more _enSafeExpr .
  * 21:51 2021-06-29, +comment: use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
  * 21:55 2021-11-11, imprvs for remedyMemoLine
- * 11:37 2022-01-13, bugfix for remedyMemoLine, v2.7
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
