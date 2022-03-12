@@ -731,8 +731,16 @@ window.Hanjst = window.HanjstDefault;
 		var matchStrOrig = null; var matchStrFirstChar = null;
 		while(match = memoRe.exec(myCont)){									   
             matchStr = match[0]; segStr = match[1];
-             if(true && (segStr.match(/[a-zA-Z0-9\-]+?\.[a-zA-Z0-9\-]+?[:]*/gm) 
-					&& (segStr.indexOf(' ') < 0 || segStr.indexOf('/') > -1))){ continue; } // pattern: //www.abc.com or //1.2.3:1234, keep urls, 09:46 2022-01-13
+            if(true && (segStr.indexOf(' ') != 0)
+					&& (segStr.indexOf(',') != 0)
+					&& (segStr.indexOf('-') != 0)
+					&& (segStr.match(/[a-zA-Z0-9\-]+?\.[a-zA-Z0-9\-]+?[:]*/gm) 
+						&& (segStr.indexOf(' ') < 0 || segStr.indexOf('/') > -1)
+						)
+					){ 
+						//console.log("memoRe: capture segStr:["+segStr+"] but skiped.");
+						continue; 
+					} // pattern: "'//www.abc.com'" or "://1.2.3:1234", keep urls, 09:46 2022-01-13, updt 12:38 2022-03-10
 			matchStrOrig = matchStr;
 			matchStrFirstChar = matchStrOrig.substring(0,1);
 			if(false){ matchStr = matchStrOrig.substring(1); } //- disabled 21:45 2021-11-11
