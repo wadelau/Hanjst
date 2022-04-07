@@ -478,14 +478,14 @@ window.Hanjst = window.HanjstDefault;
 						}
 						if(exprStr != ''){
 							if(exprStr.indexOf('t;') > -1){
-								exprStr = exprStr.replace('&gt;', '>');
-								exprStr = exprStr.replace('&lt;', '<');
+								exprStr = exprStr.replace((new RegExp("&gt;", "gm")), '>'); //- replace all
+								exprStr = exprStr.replace((new RegExp("&lt;", "gm")), '<');
 							}
 							if(needSemiComma){ exprStr += ';'; }
 							if(exprStr.match(/ (eq|lt|gt) /)){
 								exprStr = exprStr.replace('eq', '==')
 									.replace('lt', '<')
-									.replace('gt', '>');
+									.replace('gt', '>'); //- simple operators in inline-sentence
 							}
 							if(exprStr.indexOf('&amp;') > -1){
 								exprStr = exprStr.replace((new RegExp("&amp;", "gm")), '&');
