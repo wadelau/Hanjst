@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.7
+ * @Ver 2.8
  */
 
 "use strict"; //- we are serious
@@ -270,7 +270,7 @@ window.Hanjst = window.HanjstDefault;
 										+'Hanjst.appendScript(\''+exprStr+'\', \'\');'
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
 										+' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*200+100));'); //- why two seconds?
+										+ 'parseInt(Math.random()*1000+500));'); //- why two seconds?
 								}
 								else{
 									if(isDebug){ 
@@ -286,7 +286,7 @@ window.Hanjst = window.HanjstDefault;
 								tplSegment.push('var tmpTimer'+ipos+'=window.setTimeout(function(){try{ Hanjst.appendScript(\'\', \''+matchStr+'\');' 
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
 										+' found error with embed src scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*200+100));');
+										+ 'parseInt(Math.random()*1000+500));');
 							}
 							else{
 								appendScript(exprStr, matchStr);
@@ -977,5 +977,6 @@ window.Hanjst = window.HanjstDefault;
  * 21:51 2021-06-29, +comment: use Firefox to figure out exact error lineNumber and columnNumber in tpl2code in new Function
  * 21:55 2021-11-11, imprvs for remedyMemoLine
  * 11:37 2022-01-13, bugfix for remedyMemoLine, v2.7
+ * 08:09 2022-06-04, imprvs for delay more time for async scripts, v2.8
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
