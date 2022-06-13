@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.9
+ * @Ver 2.8
  */
 
 "use strict"; //- we are serious
@@ -237,7 +237,7 @@ window.Hanjst = window.HanjstDefault;
 		var scriptRe = /<script[^>]*>(.*?)<\/script>/gm;
 		var hasScript = false; var isIncludeScript = false; 
 		var asyncScriptArr = []; var isAsync = false; var srcPos = -1;
-		var regExp1906 = new RegExp("'", 'gm'); var asyncScripti = 0;
+		var regExp1906 = new RegExp("'", 'gm');
 		for(var $prei in tplSegmentPre){
 			tplRawNew = tplSegmentPre[$prei];
 			if(tplRawNew.indexOf(unParseTag) > -1){ // literal scripts
@@ -270,7 +270,7 @@ window.Hanjst = window.HanjstDefault;
 										+'Hanjst.appendScript(\''+exprStr+'\', \'\');'
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
 										+' found error with embed scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*100+'+((asyncScripti++)*100)+'));'); //- why two seconds?
+										+ 'parseInt(Math.random()*1000+500));'); //- why two seconds?
 								}
 								else{
 									if(isDebug){ 
@@ -286,7 +286,7 @@ window.Hanjst = window.HanjstDefault;
 								tplSegment.push('var tmpTimer'+ipos+'=window.setTimeout(function(){try{ Hanjst.appendScript(\'\', \''+matchStr+'\');' 
 										+'}catch(tmpErr){if('+isDebug+'){console.log("'+logTag
 										+' found error with embed src scripts:\"+JSON.stringify(tmpErr)+\"");}};}, '
-										+ 'parseInt(Math.random()*100+'+((asyncScripti++)*100)+'));');
+										+ 'parseInt(Math.random()*1000+500));');
 							}
 							else{
 								appendScript(exprStr, matchStr);
@@ -861,10 +861,7 @@ window.Hanjst = window.HanjstDefault;
 			return ;	
 		}
 		else{
-			var asyncImagei = 0;
-			if(Hanjst.asyncImagei){ asyncImagei = Hanjst.asyncImagei; }
-			Hanjst.asyncScriptArr.push('if(true){var imageTimerX=window.setTimeout(function(){var tmpObj=document.getElementById(\''+imgId+'\');if(tmpObj){var dataSrc=tmpObj.getAttribute(\'data-src\');if(dataSrc&&dataSrc!=\'\'){tmpObj.src=dataSrc;}}}, '+((asyncImagei++)*50)+');}');
-			Hanjst.asyncImagei = asyncImagei;
+			Hanjst.asyncScriptArr.push('if(true){var imageTimerX=window.setTimeout(function(){var tmpObj=document.getElementById(\''+imgId+'\');if(tmpObj){var dataSrc=tmpObj.getAttribute(\'data-src\');if(dataSrc&&dataSrc!=\'\'){tmpObj.src=dataSrc;}}}, 100);}');
 		}
 		return ;
 	}
@@ -981,6 +978,5 @@ window.Hanjst = window.HanjstDefault;
  * 21:55 2021-11-11, imprvs for remedyMemoLine
  * 11:37 2022-01-13, bugfix for remedyMemoLine, v2.7
  * 08:09 2022-06-04, imprvs for delay more time for async scripts, v2.8
- * 22:14 2022-06-07, +asyncScripti for async include scripts embedded, v2.9
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
