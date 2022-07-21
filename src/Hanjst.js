@@ -378,7 +378,8 @@ window.Hanjst = window.HanjstDefault;
 							else{
 								//- variables operations, $a++, $a=1
 								tmpi = exprStr.indexOf('='+tplVarTag);  
-                                if( tmpi > 0 && exprStr.lastIndexOf('=') <= tmpi && !containsDot){
+                                if( tmpi > 0 && exprStr.lastIndexOf('=') <= tmpi 
+									&& !containsDot && !containsBracket){
                                     exprStr = exprStr.substring(0, tmpi)
                                         + '=' + _enSafeExpr(exprStr.substring(tmpi+1), varList);
                                 }  
@@ -433,6 +434,10 @@ window.Hanjst = window.HanjstDefault;
 									}
 									else if(tmpDotPos > 0 && tmpDotPos < tmpBrPos){
 										exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')';
+									}
+									else if(!(tmpmatch[2].match(/(=|>|<)/gm))){
+										exprStr = tmpmatch[1] + '(' + tmpmatch[2] + ')'; 
+										//- if isNaN($num) , 20220721
 									}
 									if(isDebug){
 									console.log(logTag+"illegal tpl sentence:["
