@@ -446,6 +446,7 @@ window.Hanjst = window.HanjstDefault;
 								}
 							}
 							else{
+								//- case|break ?
 								if(isDebug){ console.log("not blockBegin? ["+exprStr+"]"); }
 							}
 							if(!hasLoopElse){ 
