@@ -924,8 +924,13 @@ window.Hanjst = window.HanjstDefault;
 					};
 				}, parseInt(Math.random()*100)+200);
 			}
-            
         }
+		//- 09:17 2024-01-31
+		var timer2FreeUp = window.setTimeout(function(){
+				Hanjstjsondata = null; 
+				HanjstDefault = null;
+				Hanjst = null;
+			}, 1*1000);
     };
 	
 	//- set a trigger to Hanjst
