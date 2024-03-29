@@ -9,7 +9,7 @@
  * @ Xenxin@ufqi.com, Wadelau@hotmail.com, Wadelau@gmail.com
  * @Since July 07, 2016, refactor on Oct 10, 2018
  * @More at the page footer.
- * @Ver 2.92
+ * @Ver 2.94
  */
 
 "use strict"; //- we are serious
@@ -337,7 +337,7 @@ window.Hanjst = window.HanjstDefault;
 				while(match = tplRe.exec(segStr)){
 					ipos = match.index;
 					staticStr = segStr.substring(lastpos, ipos);
-					staticStr = staticStr.replace(/"/g, '\\"');
+					staticStr = staticStr.replace(/"/g, '\\"').trimEnd();
 					if(staticStr != ''){
 						if(hasLoopElse){
 							loopElseStr += staticStr; // empty after every loop at end
@@ -510,7 +510,7 @@ window.Hanjst = window.HanjstDefault;
 				}
 				//- last static part
 				staticStr = segStr.substring(lastpos);
-				staticStr = staticStr.replace(/"/g, '\\"');
+				staticStr = staticStr.replace(/"/g, '\\"').trimEnd();
 				if(staticStr != ''){
 					tpl2codeArr.push("\ttpl2js.push(\""+staticStr+"\");");
 				}
@@ -1002,5 +1002,6 @@ window.Hanjst = window.HanjstDefault;
  * 22:14 2022-06-07, +asyncScripti for async include scripts embedded, v2.9
  * 20:40 2023-06-29, minor bugfix for remedyMemoLine, v2.92
  * 14:23 2024-03-01, +continue, v2.93
+ * 11:37 2024-03-22, +trimEnd for staticStr, rm empty lines. v2.94
  *** !!!WARNING!!! PLEASE DO NOT COPY & PASTE PIECES OF THESE CODES!
  */
